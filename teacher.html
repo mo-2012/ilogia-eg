@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة المعلم — ilogia</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F4EC;--ink:#16193A;--navy:#1C2656;--blue:#2E3E7E;--lime:#A4CE3A;--card:#fff;--mut:#4B5070;--bad:#8E2323}
+@media(prefers-color-scheme:dark){:root{--bg:#12142B;--ink:#EDEBE2;--card:#1B1F3D;--mut:#AEB3D6;--bad:#FF9A9A}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:1rem/1.7 Cairo,system-ui,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.8rem 1.2rem;border-bottom:2px solid var(--navy);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.5rem;color:var(--blue);font-weight:800;font-size:1.4rem;text-decoration:none}.brand img{block-size:34px}
+.brand small{background:var(--lime);color:#16193A;border-radius:8px;padding:0 .5rem;font-size:.85rem}
+main{max-inline-size:1000px;margin:auto;padding:1rem}
+.card{background:var(--card);border:2px solid var(--navy);border-radius:16px;padding:1rem;margin-block-end:1rem}
+.btn{font:inherit;font-weight:700;padding:.45rem 1.1rem;border:2px solid var(--navy);border-radius:12px;background:var(--card);color:var(--ink);cursor:pointer;box-shadow:3px 3px 0 var(--lime);text-decoration:none}
+.btn.p{background:var(--blue);color:#fff}.btn:disabled{opacity:.6}.btn.d{border-color:var(--bad);color:var(--bad);box-shadow:none;padding:.2rem .7rem}
+label{display:block;font-weight:600;margin-block-end:.7rem}label small{font-weight:400;color:var(--mut)}
+input,select{display:block;inline-size:100%;margin-block-start:.25rem;font:inherit;padding:.5rem .7rem;border:2px solid var(--navy);border-radius:10px;background:var(--card);color:var(--ink)}
+input[type=checkbox]{display:inline-block;inline-size:auto;margin-inline-end:.4rem}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-block-end:1rem}
+.stats div{background:var(--card);border:2px solid var(--navy);border-radius:14px;padding:.7rem;text-align:center;box-shadow:3px 3px 0 var(--lime)}.stats b{display:block;font-size:1.6rem;color:var(--blue)}
+.tabs{display:flex;gap:.5rem;margin-block-end:1rem;flex-wrap:wrap}.tabs .btn[aria-pressed=true]{background:var(--navy);color:#fff}
+.err{color:var(--bad);min-block-size:1.4rem;margin:.3rem 0}.ok{color:#5F7E12;font-weight:700}
+.item{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.6rem 0;border-block-end:1px solid #8884}.item:last-child{border:0}
+.item span{color:var(--mut);font-size:.9rem}.pill{background:var(--lime);color:#16193A;border-radius:99px;padding:0 .6rem;font-size:.8rem;margin-inline-start:.4rem}
+.bar{block-size:8px;background:#8883;border-radius:4px;overflow:hidden;margin-block-start:.4rem}.bar i{display:block;block-size:100%;background:var(--lime);inline-size:0}
+[hidden]{display:none!important}#login{max-inline-size:440px;margin:2rem auto}
+</style>
+</head>
+<body>
+<header><a class="brand" href="/"><img src="logo-mark.png" alt=""><span>ilogia</span><small>المعلم</small></a><div id="who" hidden><span id="whoName"></span> <button class="btn" id="out">خروج</button></div></header>
+<main>
+<section id="login" class="card" hidden>
+  <h2 style="margin-top:0">دخول المعلم</h2>
+  <form id="lf" novalidate><label>البريد الإلكتروني<input id="em" type="email" autocomplete="username" dir="ltr"></label>
+  <label>كلمة المرور<input id="pw" type="password" autocomplete="current-password" dir="ltr"></label>
+  <p class="err" id="le" role="alert"></p><button class="btn p" id="lb" style="inline-size:100%">دخول</button>
+  <p style="margin:.8rem 0 0"><a href="#" id="fg">نسيت كلمة المرور؟</a></p></form>
+  <p style="color:var(--mut);font-size:.9rem">الدخول للمعلمين المعتمدين فقط. لو معندكش صلاحية، سجّل حساب في الموقع وابعت الإيميل لإدارة المنصة لتفعيل صلاحية المعلم.</p>
+</section>
+
+<section id="dash" hidden>
+  <div class="stats"><div><b id="sV">٠</b>دروس مرفوعة</div><div><b id="sF">٠</b>مذكرات مرفوعة</div><div><b id="sS">٠</b>طلاب أنهوا دروسك</div><div><b id="sC">٠</b>مرات إكمال</div><div><b id="sH">٠</b>ساعات مذاكرة</div></div>
+  <div class="tabs"><button class="btn" data-t="file" aria-pressed="true">رفع مذكرة</button><button class="btn" data-t="vid" aria-pressed="false">إضافة درس فيديو</button><button class="btn" data-t="mine" aria-pressed="false">ملفاتي</button></div>
+
+  <form id="ff" class="card" data-p="file" novalidate><h3 style="margin-top:0">رفع مذكرة / ملف</h3>
+    <label>العنوان<input id="fTitle"></label>
+    <div class="row"><label>المادة<select id="fSub"></select></label><label>الصف<select id="fGr"></select></label><label>الوحدة <small>(اختياري)</small><input id="fUnit"></label><label>العام الدراسي <small>(اختياري)</small><input id="fYear" placeholder="٢٠٢٦/٢٠٢٧"></label></div>
+    <label>الملف (PDF أو غيره)<input id="fFile" type="file"></label>
+    <label><input id="fFree" type="checkbox">مجاني (متاح لكل الطلاب)</label>
+    <div class="bar" id="fBar" hidden><i></i></div><p class="err" id="fe" role="alert"></p><button class="btn p" id="fb">رفع المذكرة</button></form>
+
+  <form id="vf" class="card" data-p="vid" hidden novalidate><h3 style="margin-top:0">إضافة درس فيديو</h3>
+    <label>عنوان الدرس<input id="vTitle"></label>
+    <div class="row"><label>المادة<select id="vSub"></select></label><label>الصف<select id="vGr"></select></label><label>الوحدة <small>(اختياري)</small><input id="vUnit"></label>
+    <label>الترم <small>(للشهادات)</small><select id="vTerm"><option value="">بدون</option><option>الترم الأول</option><option>الترم الثاني</option></select></label>
+    <label>المدة<input id="vDur" placeholder="12:30" dir="ltr"></label><label>المستوى<select id="vLvl"><option>مبتدئ</option><option>متوسط</option><option>متقدم</option></select></label></div>
+    <label>رابط الفيديو <small>(يوتيوب أو رابط مباشر)</small><input id="vUrl" dir="ltr" placeholder="https://"></label>
+    <label><input id="vFree" type="checkbox">مجاني</label><p class="err" id="ve" role="alert"></p><button class="btn p" id="vb">إضافة الدرس</button></form>
+
+  <div class="card" data-p="mine" hidden><h3 style="margin-top:0">دروسي</h3><div id="lv"></div><h3>مذكراتي</h3><div id="ll"></div></div>
+</section>
+<p id="msg" class="ok" role="status"></p>
+</main>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+const URL_='https://zugwicbbfbefbbwugfxq.supabase.co';
+const sb=createClient(URL_,'sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const mk=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};   // textContent only (no XSS)
+const ERR={forbidden:'ليس لديك صلاحية المعلم','Invalid login credentials':'البريد أو كلمة المرور غير صحيحة','Email not confirmed':'فعّل بريدك الإلكتروني أولًا'};
+const em=x=>{const m=String(x?.message||x);for(const k in ERR)if(m.includes(k))return ERR[k];return m||'حدث خطأ، حاول مرة أخرى'};
+const flash=t=>{$('#msg').textContent=t;setTimeout(()=>{if($('#msg').textContent===t)$('#msg').textContent=''},4000)};
+let me=null,grades=[],subjects=[];
+
+async function boot(){const {data:{session}}=await sb.auth.getSession();
+  if(!session)return show('login');
+  const r=await sb.rpc('is_teacher');if(r.error||!r.data){await sb.auth.signOut();show('login');$('#le').textContent='هذا الحساب ليس حساب معلم';return}
+  me=session.user;const p=await sb.from('profiles').select('full_name').eq('id',me.id).maybeSingle();
+  $('#whoName').textContent=p.data?.full_name||me.email;show('dash');await loadMeta();refresh()}
+function show(w){$('#login').hidden=w!=='login';$('#dash').hidden=w!=='dash';$('#who').hidden=w!=='dash'}
+$('#lf').onsubmit=async e=>{e.preventDefault();const b=$('#lb');$('#le').textContent='';
+  const email=$('#em').value.trim(),pw=$('#pw').value;if(!/^\S+@\S+\.\S+$/.test(email)||pw.length<6)return $('#le').textContent='اكتب البريد وكلمة المرور (٦ أحرف على الأقل)';
+  b.disabled=true;try{const r=await sb.auth.signInWithPassword({email,password:pw});if(r.error)throw r.error;await boot()}catch(x){$('#le').textContent=em(x)}b.disabled=false};
+$('#fg').onclick=async e=>{e.preventDefault();const email=$('#em').value.trim();if(!/^\S+@\S+\.\S+$/.test(email))return $('#le').textContent='اكتب بريدك أولًا';
+  const r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin});$('#le').textContent=r.error?em(r.error):'';if(!r.error)flash('تم إرسال رابط استعادة كلمة المرور')};
+$('#out').onclick=async()=>{await sb.auth.signOut();me=null;show('login')};
+document.querySelectorAll('.tabs [data-t]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs [data-t]').forEach(x=>x.setAttribute('aria-pressed',x===b));document.querySelectorAll('[data-p]').forEach(p=>p.hidden=p.dataset.p!==b.dataset.t)});
+
+async function loadMeta(){[grades,subjects]=(await Promise.all([sb.from('grades').select('id,name').order('sort_order'),sb.from('subjects').select('id,name').order('sort_order')])).map(r=>r.data||[]);
+  for(const [id,L] of [['fSub',subjects],['vSub',subjects],['fGr',grades],['vGr',grades]]){const s=$('#'+id);s.replaceChildren(...L.map(o=>{const op=mk('option',o.name);op.value=o.id;return op}))}}
+const hrs=s=>{const h=Math.floor(s/3600),m=Math.round(s%3600/60);return h?AR(h)+'س '+AR(m)+'د':AR(m)+'د'};
+async function refresh(){
+  const [st,v,l]=await Promise.all([sb.rpc('teacher_stats'),sb.rpc('teacher_list_videos'),sb.rpc('teacher_list_library')]);
+  const s=st.data||{};$('#sV').textContent=AR(s.videos||0);$('#sF').textContent=AR(s.files||0);$('#sS').textContent=AR(s.students||0);$('#sC').textContent=AR(s.completions||0);$('#sH').textContent=hrs(s.study_seconds||0);
+  const nm=(L,id)=>(L.find(x=>x.id===id)||{}).name||'';
+  const list=(box,rows,kind)=>{box.replaceChildren(...(rows.length?rows.map(r=>{const it=mk('div',null,'item'),t=mk('div');t.append(mk('b',r.title));if(r.is_free)t.append(mk('em','مجاني','pill'));
+    t.append(mk('br'),mk('span',[nm(subjects,r.subject_id),nm(grades,r.grade_id),r.unit].filter(Boolean).join(' · ')));
+    const d=mk('button','حذف','btn d');d.onclick=()=>del(kind,r);it.append(t,d);return it}):[mk('p','لا يوجد شيء بعد',null)]))};
+  list($('#lv'),v.data||[],'v');list($('#ll'),l.data||[],'l')}
+async function del(kind,r){if(!confirm('حذف «'+r.title+'» نهائيًا؟'))return;
+  try{if(kind==='l'&&r.file_path&&!/^https?:/.test(r.file_path))await sb.storage.from('library').remove([r.file_path]);
+    const x=await sb.from(kind==='v'?'videos':'library_items').delete().eq('id',r.id);if(x.error)throw x.error;flash('تم الحذف');refresh()}catch(x){flash(em(x))}}
+
+const num=v=>v?+v:null;
+$('#vf').onsubmit=async e=>{e.preventDefault();const er=$('#ve');er.textContent='';const title=$('#vTitle').value.trim(),url=$('#vUrl').value.trim();
+  if(title.length<3)return er.textContent='اكتب عنوان الدرس';if(!/^https?:\/\/\S+$/.test(url))return er.textContent='اكتب رابط فيديو صحيح يبدأ بـ https://';
+  $('#vb').disabled=true;try{const r=await sb.from('videos').insert({title,unit:$('#vUnit').value.trim()||null,subject_id:num($('#vSub').value),grade_id:num($('#vGr').value),term:$('#vTerm').value||null,
+      duration:$('#vDur').value.trim()||'00:00',level:$('#vLvl').value,is_free:$('#vFree').checked,video_url:url,teacher_id:me.id});if(r.error)throw r.error;
+    $('#vf').reset();flash('تمت إضافة الدرس');refresh()}catch(x){er.textContent=em(x)}$('#vb').disabled=false};
+
+// small files: normal upload. big files: resumable (TUS) in 6MB chunks, same as the admin panel.
+async function upload(path,file,onP){
+  if(file.size<=6*1024*1024){const r=await sb.storage.from('library').upload(path,file,{contentType:file.type||'application/octet-stream'});if(r.error)throw r.error;onP(1);return}
+  const tus=await import('https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/+esm');const {data:{session}}=await sb.auth.getSession();
+  await new Promise((ok,no)=>{const u=new tus.Upload(file,{endpoint:URL_.replace('.supabase.co','.storage.supabase.co')+'/storage/v1/upload/resumable',retryDelays:[0,3000,5000,10000,20000],
+    headers:{authorization:'Bearer '+session.access_token,'x-upsert':'false'},uploadDataDuringCreation:true,removeFingerprintOnSuccess:true,chunkSize:6*1024*1024,
+    metadata:{bucketName:'library',objectName:path,contentType:file.type||'application/octet-stream',cacheControl:'3600'},onError:no,onSuccess:ok,onProgress:(a,b)=>onP(a/b)});
+    u.findPreviousUploads().then(p=>{if(p.length)u.resumeFromPreviousUpload(p[0]);u.start()})})}
+$('#ff').onsubmit=async e=>{e.preventDefault();const er=$('#fe'),f=$('#fFile').files[0],title=$('#fTitle').value.trim(),bar=$('#fBar');er.textContent='';
+  if(title.length<3)return er.textContent='اكتب عنوان المذكرة';if(!f)return er.textContent='اختر الملف';
+  $('#fb').disabled=true;bar.hidden=false;const path=`teachers/${me.id}/${Date.now()}_${Math.random().toString(36).slice(2,7)}_${f.name.replace(/[^\w.-]/g,'_')}`;
+  try{await upload(path,f,p=>bar.firstChild.style.inlineSize=Math.round(p*100)+'%');
+    const r=await sb.from('library_items').insert({title,unit:$('#fUnit').value.trim()||null,subject_id:num($('#fSub').value),grade_id:num($('#fGr').value),academic_year:$('#fYear').value.trim()||null,
+      type:/\.pdf$/i.test(f.name)?'ملف PDF':'ملف',is_free:$('#fFree').checked,file_path:path,teacher_id:me.id});
+    if(r.error){await sb.storage.from('library').remove([path]);throw r.error}
+    $('#ff').reset();flash('تم رفع المذكرة');refresh()}catch(x){er.textContent=em(x)}
+  bar.hidden=true;bar.firstChild.style.inlineSize='0';$('#fb').disabled=false};
+boot();
+</script>
+</body>
+</html>
