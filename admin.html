@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head><meta name="robots" content="noindex,nofollow"><link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة تحكم Elearn</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <link rel="icon" href="elearn.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+<style>
+  :root{--blue:#2E3E7E;--blue-d:#1C2656;--blue-m:#344DAA;--lime:#A4CE3A;--paper:#F7F4EC;--card:#FFFDF8;--mut:#EDE9DD;--ink:#16193A;--ink2:#4A4E6B;--ink3:#767A93;--line:#D9D4C4;--err:#A32D2D}
+  body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif!important;background:var(--paper)!important;color:var(--ink)!important}
+  h1,h2,h3{font-family:'Noto Naskh Arabic',serif;color:var(--blue-d)}
+  .mono{font-family:'IBM Plex Sans Arabic',monospace}
+  ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+  .bg-slate-950{background:var(--paper)!important}.bg-slate-950\/90{background:rgba(247,244,236,.94)!important}
+  .bg-slate-900\/60,.bg-slate-900\/70,.bg-slate-800\/40,.bg-slate-800\/30,.bg-slate-800\/60{background:var(--card)!important}
+  .bg-slate-800{background:#fff!important}.hover\:bg-slate-800:hover{background:var(--mut)!important}
+  .border-slate-700,.border-slate-800,.border-slate-700\/40{border-color:var(--line)!important}
+  .text-white,.text-slate-100,.text-slate-200{color:var(--ink)!important}.text-slate-300{color:var(--ink2)!important}.text-slate-400,.text-slate-500{color:var(--ink3)!important}
+  .text-teal-400,.text-teal-300\/80,.hover\:text-teal-400:hover{color:var(--blue-m)!important}
+  .bg-teal-500,.tab-btn.active,.rangeBtn.active{background:var(--blue)!important;color:#fff!important}
+  .text-slate-950{color:#fff!important}.hover\:bg-teal-400:hover{background:var(--blue-d)!important}
+  .bg-teal-500\/15,.bg-teal-500\/5{background:#EAF3CF!important}.border-teal-500\/30,.border-teal-500\/20{border-color:#C6DC8A!important}
+  .text-amber-400,.text-amber-400\/90,.text-amber-300\/80{color:#8A5A00!important}.bg-amber-500\/15,.bg-amber-500\/5{background:#F8EBC8!important}.border-amber-500,.border-amber-500\/30,.border-amber-500\/20{border-color:#E3C777!important}
+  .text-rose-400,.hover\:text-rose-300:hover{color:var(--err)!important}.bg-rose-500\/15,.bg-rose-500\/10,.bg-rose-500\/5,.hover\:bg-rose-500\/10:hover{background:#F7DEDE!important}
+  .border-rose-500\/30,.border-rose-500\/20,.border-rose-500\/40{border-color:#E4A8A8!important}.bg-rose-500{background:var(--err)!important}.hover\:bg-rose-400:hover{background:#7d2121!important}
+  .bg-slate-500\/15{background:var(--mut)!important}.border-slate-500\/30{border-color:var(--line)!important}
+  .focus\:border-teal-500:focus{border-color:var(--blue-m)!important}
+  .rounded-lg,.rounded-xl,.rounded-2xl,.rounded-md{border-radius:4px!important}
+  input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--blue-m);outline-offset:2px}
+  header img.brand{block-size:34px}
+  .fade-in{animation:fadeIn .25s ease}@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Noto+Naskh+Arabic:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&display=swap" rel="stylesheet"></head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+
+  <!-- تسجيل دخول الأدمِن -->
+  <div id="loginBox" class="flex min-h-screen items-center justify-center px-4">
+    <div class="w-full max-w-sm rounded-2xl border border-slate-800 bg-slate-900/70 p-6 shadow-2xl backdrop-blur">
+      <div class="mb-4 flex items-center gap-2">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/15">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-extrabold">لوحة تحكم Elearn</h1>
+          <p class="text-[11px] text-slate-500">للأدمِن فقط</p><span class="brand" style="margin-top:6px;display:flex;align-items:center;gap:.4rem;direction:ltr"><img src="logo-mark.png" alt="" style="block-size:26px"><b style="font:800 1.6rem/1 'Baloo 2',sans-serif;color:#2E3E7E">ilogia</b></span>
+        </div>
+      </div>
+      <p class="mb-3 text-xs text-slate-400">سجّل الدخول بحساب الأدمِن (Supabase)</p>
+      <div class="flex flex-wrap gap-2">
+        <input id="adminEmailInput" type="email" autocomplete="username" placeholder="البريد الإلكتروني" class="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" /><input id="adminKeyInput" type="password" autocomplete="current-password" placeholder="كلمة السر" class="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+        <button id="adminLoginBtn" class="rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">دخول</button>
+      </div>
+      <p id="loginError" class="mt-2 hidden rounded-lg bg-rose-500/10 px-3 py-2 text-xs text-rose-400"></p>
+    </div>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <!-- شريط علوي -->
+    <header class="sticky top-0 z-20 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
+        <div class="flex items-center gap-2">
+          <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          </div>
+          <span class="font-extrabold">لوحة تحكم Elearn</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="refreshBtn" class="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-slate-800">تحديث ↻</button>
+          <button id="logoutAdminBtn" class="rounded-lg border border-rose-500/30 px-3 py-1.5 text-xs font-bold text-rose-400 hover:bg-rose-500/10">خروج</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+      <!-- إحصائيات سريعة -->
+      <section class="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+          <p class="text-[11px] text-slate-500">إجمالي المستخدمين</p>
+          <p id="statUsers" class="mono mt-1 text-2xl font-extrabold text-slate-100">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+          <p class="text-[11px] text-slate-500">كل الطلبات</p>
+          <p id="statTotal" class="mono mt-1 text-2xl font-extrabold text-slate-100">—</p>
+        </div>
+        <div class="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4">
+          <p class="text-[11px] text-amber-300/80">قيد المراجعة</p>
+          <p id="statPending" class="mono mt-1 text-2xl font-extrabold text-amber-400">—</p>
+        </div>
+        <div class="rounded-2xl border border-teal-500/20 bg-teal-500/5 p-4">
+          <p class="text-[11px] text-teal-300/80">مفعّلة</p>
+          <p id="statActive" class="mono mt-1 text-2xl font-extrabold text-teal-400">—</p>
+        </div>
+        <div class="rounded-2xl border border-slate-700/40 bg-slate-800/30 p-4">
+          <p class="text-[11px] text-slate-400">منتهية / مرفوضة</p>
+          <p id="statOther" class="mono mt-1 text-2xl font-extrabold text-slate-300">—</p>
+        </div>
+      </section>
+
+      <!-- الرسوم البيانية + التصدير -->
+      <section class="mb-10">
+        <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-bold">الإحصائيات والتصدير</h2>
+          <div class="flex flex-wrap gap-2">
+            <button id="exportSubsBtn" class="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-slate-800">⬇️ تصدير الاشتراكات CSV</button>
+            <button id="exportUsersBtn" class="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-slate-800">⬇️ تصدير المستخدمين CSV</button>
+          </div>
+        </div>
+        <div class="grid gap-4 lg:grid-cols-3">
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 lg:col-span-2">
+            <div class="mb-2 flex items-center justify-between">
+              <p class="text-sm font-bold text-slate-300">نمو المستخدمين والاشتراكات</p>
+              <div class="flex gap-1">
+                <button data-range="daily" class="rangeBtn active rounded-full border border-slate-700 px-2.5 py-1 text-[11px] font-bold">يومي</button>
+                <button data-range="monthly" class="rangeBtn rounded-full border border-slate-700 px-2.5 py-1 text-[11px] font-bold">شهري</button>
+              </div>
+            </div>
+            <div class="h-64"><canvas id="growthChart"></canvas></div>
+          </div>
+          <div class="grid gap-4">
+            <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+              <p class="mb-2 text-sm font-bold text-slate-300">حالة الاشتراكات</p>
+              <div class="h-28"><canvas id="statusChart"></canvas></div>
+            </div>
+            <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
+              <p class="mb-2 text-sm font-bold text-slate-300">التوزيع حسب الباقة</p>
+              <div class="h-28"><canvas id="planChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- الاشتراكات -->
+      <section class="mb-10">
+        <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="text-lg font-bold">طلبات الاشتراك</h2>
+          <input id="subSearch" placeholder="🔍 دوّر بالاسم أو الإيميل..." class="w-full max-w-xs rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+        </div>
+        <div class="mb-4 flex flex-wrap gap-2">
+          <button data-filter="all" class="tab-btn active rounded-full border border-slate-700 px-3 py-1.5 text-xs font-bold">الكل</button>
+          <button data-filter="pending" class="tab-btn rounded-full border border-slate-700 px-3 py-1.5 text-xs font-bold">قيد المراجعة</button>
+          <button data-filter="active" class="tab-btn rounded-full border border-slate-700 px-3 py-1.5 text-xs font-bold">مفعّلة</button>
+          <button data-filter="expired" class="tab-btn rounded-full border border-slate-700 px-3 py-1.5 text-xs font-bold">منتهية</button>
+          <button data-filter="rejected" class="tab-btn rounded-full border border-slate-700 px-3 py-1.5 text-xs font-bold">مرفوضة</button>
+        </div>
+        <div id="subsWrap" class="space-y-3"></div>
+      </section>
+
+      <!-- الصفوف والمواد -->
+      <section class="mb-10 grid gap-6 lg:grid-cols-2">
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="mb-3 flex items-center gap-2 text-lg font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+            الصفوف الدراسية
+          </h2>
+          <div class="flex flex-col gap-2 sm:flex-row">
+            <input id="gName" placeholder="اسم الصف، مثال: الصف الأول الثانوي" class="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+            <select id="gStage" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm">
+              <option value="ابتدائي">ابتدائي</option>
+              <option value="اعدادي">اعدادي</option>
+              <option value="ثانوي">ثانوي</option>
+              <option value="عام">عام</option>
+            </select>
+            <button id="addGradeBtn" class="shrink-0 rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">إضافة</button>
+          </div>
+          <p id="gradeMsg" class="mt-2 text-xs"></p>
+          <div id="gradesList" class="mt-3 flex flex-col gap-1.5"></div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="mb-3 flex items-center gap-2 text-lg font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            المواد الدراسية
+          </h2>
+          <div class="flex flex-col gap-2 sm:flex-row">
+            <input id="sName" placeholder="اسم المادة، مثال: الرياضيات" class="flex-1 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+            <input id="sIcon" placeholder="إيموجي 📐" class="w-24 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <button id="addSubjectBtn" class="shrink-0 rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">إضافة</button>
+          </div>
+          <p id="subjectMsg" class="mt-2 text-xs"></p>
+          <div id="subjectsList" class="mt-3 flex flex-col gap-1.5"></div>
+        </div>
+      </section>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <!-- إضافة فيديو -->
+        <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="mb-3 flex items-center gap-2 text-lg font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            إضافة فيديو جديد
+          </h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <input id="vTitle" placeholder="عنوان الفيديو" class="sm:col-span-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+            <select id="vGrade" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+            <select id="vSubject" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+            <input id="vYear" placeholder="السنة الدراسية (اختياري) مثال 2027" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <input id="vUnit" placeholder="الوحدة/الموضوع (اختياري)" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <input id="vDuration" placeholder="المدة مثال 12:30" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <select id="vLevel" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm">
+              <option>مبتدئ</option><option>متوسط</option><option>خبير</option>
+            </select>
+            <input id="vUrl" placeholder="رابط الفيديو (mp4)" class="sm:col-span-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <label class="flex items-center gap-2 text-sm sm:col-span-2"><input id="vFree" type="checkbox" class="h-4 w-4 accent-teal-500" /> مجاني</label>
+          </div>
+          <button id="addVideoBtn" class="mt-3 w-full rounded-lg bg-teal-500 py-2.5 text-sm font-bold text-slate-950 hover:bg-teal-400 sm:w-auto sm:px-4">إضافة الفيديو</button>
+          <p id="videoMsg" class="mt-2 text-xs"></p>
+        </section>
+
+        <!-- إضافة عنصر مكتبة -->
+        <section class="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+          <h2 class="mb-3 flex items-center gap-2 text-lg font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            إضافة عنصر للمكتبة
+          </h2>
+          <div class="grid gap-3 sm:grid-cols-2">
+            <input id="lTitle" placeholder="عنوان الملف (لو هترفع أكتر من ملف، ده هيبقى بادئة قبل اسم كل ملف)" class="sm:col-span-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+            <select id="lGrade" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+            <select id="lSubject" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+            <input id="lYear" placeholder="السنة الدراسية (اختياري) مثال 2027" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <input id="lUnit" placeholder="الوحدة/الموضوع (اختياري)" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <input id="lType" placeholder="النوع: ملف PDF / مشروع كامل" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <div class="sm:col-span-2 flex flex-wrap gap-2">
+              <button type="button" id="lModeUrlBtn" class="rounded-lg bg-teal-500 px-3 py-1.5 text-xs font-bold text-slate-950">رابط خارجي</button>
+              <button type="button" id="lModeFileBtn" class="rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-bold text-slate-300 hover:bg-slate-800">رفع ملفات من الجهاز</button>
+            </div>
+            <input id="lUrl" placeholder="رابط الملف" class="sm:col-span-2 rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+            <input id="lFilesInput" type="file" multiple class="sm:col-span-2 hidden rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm text-slate-300 file:ml-3 file:rounded-lg file:border-0 file:bg-teal-500 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-slate-950" />
+            <p class="sm:col-span-2 text-[11px] text-slate-500">تقدر تختار أكتر من ملف مرة واحدة (Ctrl / Shift أثناء الاختيار) وكلهم هيتضافوا بنفس الصف والمادة.</p>
+            <label class="flex items-center gap-2 text-sm sm:col-span-2"><input id="lFree" type="checkbox" class="h-4 w-4 accent-teal-500" /> مجاني</label>
+          </div>
+          <button id="addLibBtn" class="mt-3 w-full rounded-lg bg-teal-500 py-2.5 text-sm font-bold text-slate-950 hover:bg-teal-400 sm:w-auto sm:px-4">إضافة للمكتبة</button>
+          <p id="libMsg" class="mt-2 text-xs"></p>
+          <div id="libFailDetails" class="mt-2 hidden max-h-32 space-y-0.5 overflow-y-auto rounded-lg border border-rose-500/20 bg-rose-500/5 p-2 text-[11px] text-rose-400"></div>
+        </section>
+      </div>
+
+      <!-- استيراد من ملفين: أسماء الملفات + روابط درايف (بدون رفع فعلي، بس روابط خارجية) -->
+      <section class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+        <h2 class="mb-1 flex items-center gap-2 text-lg font-bold">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M13.5 6.5l4 4L9 19l-5 1 1-5 8.5-8.5z"/><path d="M17.5 3.5l3 3"/></svg>
+          استيراد بالجملة من ملفين (أسماء + روابط درايف)
+        </h2>
+        <p class="mb-3 text-xs text-slate-500">
+          اختار ملف فيه أسماء الملفات (كل اسم في سطر/فقرة لوحده) وملف فيه روابط جوجل درايف بالترتيب
+          (كل رابط في سطر لوحده) — وهيتم ربطهم مع بعض حسب الترتيب. الملفات المقبولة: <span class="mono text-teal-400">.docx</span> أو <span class="mono text-teal-400">.txt</span>.
+        </p>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <label class="cursor-pointer rounded-lg border border-slate-700 px-4 py-2 text-center text-sm font-bold text-slate-300 hover:bg-slate-800">
+            📄 ملف الأسماء (Name files)
+            <input id="importNamesInput" type="file" accept=".docx,.txt" class="hidden" />
+          </label>
+          <label class="cursor-pointer rounded-lg border border-slate-700 px-4 py-2 text-center text-sm font-bold text-slate-300 hover:bg-slate-800">
+            🔗 ملف الروابط (Links)
+            <input id="importLinksInput" type="file" accept=".docx,.txt" class="hidden" />
+          </label>
+        </div>
+        <p id="importFilesMsg" class="mt-2 text-[11px] text-slate-500"></p>
+
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <select id="importGrade" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+          <select id="importSubject" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm"></select>
+          <input id="importYear" placeholder="السنة الدراسية (اختياري) مثال 2027" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+          <input id="importType" value="ملف PDF" placeholder="النوع" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm" />
+          <label class="flex items-center gap-2 text-sm sm:col-span-2"><input id="importFree" type="checkbox" class="h-4 w-4 accent-teal-500" /> الكل مجاني</label>
+        </div>
+
+        <div id="importPreviewWrap" class="mt-4 hidden">
+          <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-800/60 text-slate-400">
+                <tr>
+                  <th class="px-3 py-2 font-bold">#</th>
+                  <th class="px-3 py-2 font-bold">العنوان (قابل للتعديل)</th>
+                  <th class="px-3 py-2 font-bold">الرابط</th>
+                  <th class="px-3 py-2 font-bold">الحالة</th>
+                </tr>
+              </thead>
+              <tbody id="importPreviewBody"></tbody>
+            </table>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button id="importConfirmBtn" class="rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">تأكيد وإضافة الكل للمكتبة</button>
+            <button id="importCancelBtn" class="rounded-lg border border-slate-700 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-slate-800">إلغاء</button>
+            <p id="importMsg" class="text-xs"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- رفع ذكي متعدد: يرتب حسب اسم الملف -->
+      <section class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+        <h2 class="mb-1 flex items-center gap-2 text-lg font-bold">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          رفع ذكي متعدد (ترتيب أوتوماتيك حسب اسم الملف)
+        </h2>
+        <p class="mb-3 text-xs text-slate-500">
+          سمّي كل ملف بالشكل: <span class="mono text-teal-400">الصف - المادة - العنوان</span> مثال:
+          <span class="mono text-slate-400">الصف الأول الثانوي - رياضيات - الوحدة الأولى.pdf</span> —
+          وهيحاول يحدد الصف والمادة تلقائي من الاسم، وتقدر تصحح أي حقل غلط قبل ما تأكد الرفع.
+        </p>
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="cursor-pointer rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">
+            اختيار ملفات متعددة
+            <input id="bulkFilesInput" type="file" multiple class="hidden" />
+          </label>
+          <label class="cursor-pointer rounded-lg border border-slate-700 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-slate-800">
+            اختيار مجلد كامل
+            <input id="bulkFolderInput" type="file" multiple webkitdirectory directory class="hidden" />
+          </label>
+          <label class="mr-auto flex items-center gap-2 text-sm"><input id="bulkFree" type="checkbox" class="h-4 w-4 accent-teal-500" /> الكل مجاني</label>
+        </div>
+        <div id="bulkPreviewWrap" class="mt-4 hidden">
+          <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-right text-xs">
+              <thead class="bg-slate-800/60 text-slate-400">
+                <tr>
+                  <th class="px-3 py-2 font-bold">الملف</th>
+                  <th class="px-3 py-2 font-bold">العنوان</th>
+                  <th class="px-3 py-2 font-bold">الصف</th>
+                  <th class="px-3 py-2 font-bold">المادة</th>
+                  <th class="px-3 py-2 font-bold">النوع</th>
+                  <th class="px-3 py-2 font-bold">الحالة</th>
+                </tr>
+              </thead>
+              <tbody id="bulkPreviewBody"></tbody>
+            </table>
+          </div>
+          <p class="mt-2 text-[11px] text-amber-400/90">الحقول اللي حدودها برتقالي معناها إنه مقدرش يحدد الصف/المادة تلقائي — اختارهم يدوي قبل التأكيد.</p>
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button id="bulkConfirmBtn" class="rounded-lg bg-teal-500 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-400">تأكيد ورفع الكل</button>
+            <button id="bulkCancelBtn" class="rounded-lg border border-slate-700 px-4 py-2 text-sm font-bold text-slate-300 hover:bg-slate-800">إلغاء</button>
+            <p id="bulkMsg" class="text-xs"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- الكتب/الملفات الموجودة على السيرفر -->
+      <section class="mt-6 rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
+        <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <h2 class="flex items-center gap-2 text-lg font-bold">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            الكتب والملفات الموجودة على السيرفر
+          </h2>
+          <input id="libSearch" placeholder="🔍 دوّر بعنوان الملف..." class="w-full max-w-xs rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-teal-500" />
+        </div>
+        <div id="libraryListWrap" class="max-h-[520px] space-y-2 overflow-y-auto pl-1"></div>
+        <p id="libraryListEmpty" class="hidden py-6 text-center text-xs text-slate-500">لسه مفيش ملفات مرفوعة.</p>
+      </section>
+    </main>
+  </div>
+
+<script type="module">
+import { adminSignIn, adminSession, adminSignOut } from "./admin-adapter.js";
+// غيّر ده لو رفعت المشروع في مجلد فرعي مختلف
+const API_BASE = "api";
+let allSubs = [];
+let ALL_USERS = [];
+let currentFilter = "all";
+let currentSearch = "";
+let chartRange = "daily";
+let growthChartInstance = null, statusChartInstance = null, planChartInstance = null;
+
+function authHeaders(extra = {}) { return extra; }
+
+function fmtDate(s) {
+  if (!s) return "-";
+  const d = new Date(s.replace(" ", "T"));
+  if (isNaN(d)) return s;
+  return d.toLocaleDateString("ar-EG", { day: "2-digit", month: "2-digit", year: "numeric" }) + " " + d.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit" });
+}
+
+function daysLeft(expiresAt) {
+  if (!expiresAt) return null;
+  const ms = new Date(expiresAt.replace(" ", "T")) - new Date();
+  return Math.ceil(ms / 86400000);
+}
+
+const STATUS_META = {
+  pending: { label: "قيد المراجعة", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30" },
+  active: { label: "مفعّل", cls: "bg-teal-500/15 text-teal-400 border-teal-500/30" },
+  rejected: { label: "مرفوض", cls: "bg-rose-500/15 text-rose-400 border-rose-500/30" },
+  expired: { label: "منتهي", cls: "bg-slate-500/15 text-slate-400 border-slate-500/30" },
+};
+
+async function loadSubs() {
+  const res = await fetch(`${API_BASE}/admin/subscriptions.php`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!data.ok) { showLogin(data.error); return; }
+  allSubs = data.subscriptions;
+  ALL_USERS = data.users || [];
+
+  document.getElementById("statUsers").textContent = data.users_count ?? "—";
+  document.getElementById("statTotal").textContent = data.stats?.total ?? allSubs.length;
+  document.getElementById("statPending").textContent = data.stats?.pending ?? 0;
+  document.getElementById("statActive").textContent = data.stats?.active ?? 0;
+  document.getElementById("statOther").textContent = (data.stats?.expired ?? 0) + (data.stats?.rejected ?? 0);
+
+  renderSubs();
+  renderCharts();
+}
+
+function renderSubs() {
+  const wrap = document.getElementById("subsWrap");
+  let rows = allSubs;
+  if (currentFilter !== "all") rows = rows.filter(s => s.status === currentFilter);
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    rows = rows.filter(s => s.user_name.toLowerCase().includes(q) || s.user_email.toLowerCase().includes(q));
+  }
+
+  if (!rows.length) {
+    wrap.innerHTML = `<p class="rounded-xl border border-dashed border-slate-800 py-8 text-center text-sm text-slate-500">لا توجد طلبات مطابقة.</p>`;
+    return;
+  }
+
+  wrap.innerHTML = rows.map(s => {
+    const meta = STATUS_META[s.status] || STATUS_META.pending;
+    const dLeft = s.status === "active" ? daysLeft(s.expires_at) : null;
+    const expiryLine = s.status === "active"
+      ? (s.expires_at
+          ? `<span class="${dLeft !== null && dLeft <= 3 ? "text-amber-400" : "text-slate-400"}">ينتهي في ${fmtDate(s.expires_at)} ${dLeft !== null ? `(${dLeft <= 0 ? "منتهي اليوم" : "باقي " + dLeft + " يوم"})` : ""}</span>`
+          : `<span class="text-slate-500">بدون تاريخ انتهاء</span>`)
+      : "";
+
+    return `
+    <div class="fade-in flex flex-wrap items-start justify-between gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+      <div class="min-w-0 flex-1">
+        <div class="mb-1 flex flex-wrap items-center gap-2">
+          <p class="text-sm font-bold">${s.user_name}</p>
+          <span class="rounded-full border px-2 py-0.5 text-[10px] font-bold ${meta.cls}">${meta.label}</span>
+        </div>
+        <p class="text-xs text-slate-500">${s.user_email}</p>
+        <p class="mt-1.5 text-xs text-slate-400">
+          الباقة: <span class="font-bold text-slate-200">${s.plan_name}</span>${s.price_label ? ` (${s.price_label})` : ""} —
+          وسيلة الدفع: <span class="font-bold text-slate-200">${s.payment_method || "-"}</span>
+        </p>
+        <p class="mt-1 text-[11px] text-slate-500">طلب في: ${fmtDate(s.created_at)}${s.reviewed_at ? ` · تمت المراجعة: ${fmtDate(s.reviewed_at)}` : ""}</p>
+        ${expiryLine ? `<p class="mt-1 text-[11px]">${expiryLine}</p>` : ""}
+        ${s.receipt_path ? `<a href="${s.receipt_path}" target="_blank" class="mt-2 inline-flex items-center gap-1 text-xs text-teal-400 underline">📎 عرض إيصال الدفع</a>` : ""}
+      </div>
+      <div class="flex shrink-0 gap-2">
+        ${s.status === "pending" ? `
+          <button data-id="${s.id}" data-action="active" class="reviewBtn rounded-lg bg-teal-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-teal-400">موافقة</button>
+          <button data-id="${s.id}" data-action="rejected" class="reviewBtn rounded-lg bg-rose-500 px-3 py-1.5 text-xs font-bold text-slate-950 hover:bg-rose-400">رفض</button>
+        ` : s.status === "active" ? `
+          <button data-id="${s.id}" data-action="rejected" class="reviewBtn rounded-lg border border-rose-500/40 px-3 py-1.5 text-xs font-bold text-rose-400 hover:bg-rose-500/10">إلغاء</button>
+        ` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
+  wrap.querySelectorAll(".reviewBtn").forEach(btn => btn.addEventListener("click", async () => {
+    btn.disabled = true;
+    await fetch(`${API_BASE}/admin/review.php`, {
+      method: "POST", headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ id: +btn.dataset.id, action: btn.dataset.action }),
+    });
+    loadSubs();
+  }));
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderSubs();
+  });
+});
+document.getElementById("subSearch").addEventListener("input", (e) => {
+  currentSearch = e.target.value.trim();
+  renderSubs();
+});
+document.getElementById("refreshBtn").addEventListener("click", loadSubs);
+
+/* =====================================================
+   الرسوم البيانية (نمو المستخدمين/الاشتراكات + التوزيعات)
+===================================================== */
+function bucketKey(dateStr, range) {
+  const d = new Date((dateStr || "").replace(" ", "T"));
+  if (isNaN(d)) return null;
+  if (range === "monthly") return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function buildSeries(dates, range) {
+  const counts = {};
+  dates.forEach(dt => {
+    const k = bucketKey(dt, range);
+    if (k) counts[k] = (counts[k] || 0) + 1;
+  });
+  const keys = Object.keys(counts).sort();
+  let running = 0;
+  const cumulative = keys.map(k => (running += counts[k]));
+  return { labels: keys, cumulative };
+}
+
+const CHART_COLORS = { teal: "#344DAA", amber: "#f59e0b", rose: "#f43f5e", slate: "#64748b", sky: "#38bdf8" };
+
+function renderCharts() {
+  if (typeof Chart === "undefined") return;
+
+  // نمو المستخدمين + الاشتراكات (تراكمي حسب الفترة المختارة)
+  const userDates = ALL_USERS.map(u => u.created_at);
+  const subDates = allSubs.map(s => s.created_at);
+  const userSeries = buildSeries(userDates, chartRange);
+  const subSeries = buildSeries(subDates, chartRange);
+  const labels = Array.from(new Set([...userSeries.labels, ...subSeries.labels])).sort();
+  const userMap = Object.fromEntries(userSeries.labels.map((l, i) => [l, userSeries.cumulative[i]]));
+  const subMap = Object.fromEntries(subSeries.labels.map((l, i) => [l, subSeries.cumulative[i]]));
+  let lastU = 0, lastS = 0;
+  const userData = labels.map(l => (userMap[l] !== undefined ? (lastU = userMap[l]) : lastU));
+  const subData = labels.map(l => (subMap[l] !== undefined ? (lastS = subMap[l]) : lastS));
+
+  const growthCtx = document.getElementById("growthChart");
+  if (growthChartInstance) growthChartInstance.destroy();
+  growthChartInstance = new Chart(growthCtx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        { label: "مستخدمين", data: userData, borderColor: CHART_COLORS.teal, backgroundColor: CHART_COLORS.teal + "22", tension: 0.3, fill: true },
+        { label: "اشتراكات", data: subData, borderColor: CHART_COLORS.sky, backgroundColor: CHART_COLORS.sky + "22", tension: 0.3, fill: true },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: "#cbd5e1" } } },
+      scales: {
+        x: { ticks: { color: "#64748b", maxTicksLimit: 8 }, grid: { color: "#D9D4C4" } },
+        y: { ticks: { color: "#64748b" }, grid: { color: "#D9D4C4" }, beginAtZero: true },
+      },
+    },
+  });
+
+  // توزيع حالات الاشتراكات
+  const statusCounts = { pending: 0, active: 0, expired: 0, rejected: 0 };
+  allSubs.forEach(s => { if (statusCounts[s.status] !== undefined) statusCounts[s.status]++; });
+  const statusCtx = document.getElementById("statusChart");
+  if (statusChartInstance) statusChartInstance.destroy();
+  statusChartInstance = new Chart(statusCtx, {
+    type: "doughnut",
+    data: {
+      labels: ["قيد المراجعة", "مفعّل", "منتهي", "مرفوض"],
+      datasets: [{ data: [statusCounts.pending, statusCounts.active, statusCounts.expired, statusCounts.rejected], backgroundColor: [CHART_COLORS.amber, CHART_COLORS.teal, CHART_COLORS.slate, CHART_COLORS.rose], borderWidth: 0 }],
+    },
+    options: { maintainAspectRatio: false, plugins: { legend: { position: "bottom", labels: { color: "#cbd5e1", boxWidth: 10, font: { size: 10 } } } } },
+  });
+
+  // توزيع حسب الباقة
+  const planCounts = {};
+  allSubs.forEach(s => { planCounts[s.plan_name] = (planCounts[s.plan_name] || 0) + 1; });
+  const planCtx = document.getElementById("planChart");
+  if (planChartInstance) planChartInstance.destroy();
+  planChartInstance = new Chart(planCtx, {
+    type: "doughnut",
+    data: {
+      labels: Object.keys(planCounts),
+      datasets: [{ data: Object.values(planCounts), backgroundColor: [CHART_COLORS.teal, CHART_COLORS.sky, CHART_COLORS.amber, CHART_COLORS.rose, CHART_COLORS.slate], borderWidth: 0 }],
+    },
+    options: { maintainAspectRatio: false, plugins: { legend: { position: "bottom", labels: { color: "#cbd5e1", boxWidth: 10, font: { size: 10 } } } } },
+  });
+}
+
+document.querySelectorAll(".rangeBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".rangeBtn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    chartRange = btn.dataset.range;
+    renderCharts();
+  });
+});
+
+/* =====================================================
+   تصدير CSV
+===================================================== */
+function downloadCSV(filename, rows) {
+  const csv = rows.map(row => row.map(cell => {
+    const v = (cell === null || cell === undefined) ? "" : String(cell);
+    return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }).join(",")).join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+document.getElementById("exportSubsBtn").addEventListener("click", () => {
+  const header = ["ID", "الاسم", "الإيميل", "الباقة", "السعر", "وسيلة الدفع", "الحالة", "تاريخ الطلب", "تاريخ المراجعة", "تاريخ الانتهاء"];
+  const rows = allSubs.map(s => [s.id, s.user_name, s.user_email, s.plan_name, s.price_label, s.payment_method, s.status, s.created_at, s.reviewed_at, s.expires_at]);
+  downloadCSV(`اشتراكات_elearn_${new Date().toISOString().slice(0, 10)}.csv`, [header, ...rows]);
+});
+
+document.getElementById("exportUsersBtn").addEventListener("click", () => {
+  const header = ["ID", "الاسم", "الإيميل", "تاريخ التسجيل"];
+  const rows = ALL_USERS.map(u => [u.id, u.name, u.email, u.created_at]);
+  downloadCSV(`مستخدمين_elearn_${new Date().toISOString().slice(0, 10)}.csv`, [header, ...rows]);
+});
+
+function showLogin(err) {
+  document.getElementById("loginBox").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+  if (err) {
+    const e = document.getElementById("loginError");
+    e.textContent = err; e.classList.remove("hidden");
+  }
+}
+function showDashboard() {
+  document.getElementById("loginBox").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  loadSubs();
+  loadGrades();
+  loadSubjects();
+  loadLibrary();
+}
+
+/* =====================================================
+   أدوات مشتركة للرفع
+===================================================== */
+function stripExt(name) {
+  return name.replace(/\.[^/.]+$/, "");
+}
+
+async function uploadFileOnce(file) {
+  const fd = new FormData();
+  fd.append("file", file);
+  const res = await fetch(`${API_BASE}/admin/upload_library.php`, {
+    method: "POST",
+        body: fd,
+  });
+  const data = await parseJsonResponse(res);
+  if (!data.ok) throw new Error(data.error || "فشل رفع الملف");
+  return data.url;
+}
+
+/** نفس فكرة addLibraryItemWithRetry لكن لرفع الملف نفسه، عشان لو السيرفر رجّع رد فاضي بسبب الحماية من الطلبات السريعة */
+async function uploadFile(file, tries = 4, baseDelayMs = 800) {
+  let lastErr;
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    try {
+      return await uploadFileOnce(file);
+    } catch (e) {
+      lastErr = e;
+      if (attempt < tries) await sleep(baseDelayMs * attempt);
+    }
+  }
+  throw lastErr;
+}
+
+/* =====================================================
+   الصفوف والمواد
+===================================================== */
+let GRADES = [];
+let SUBJECTS = [];
+
+async function loadGrades() {
+  const res = await fetch(`${API_BASE}/grades.php`);
+  const data = await res.json();
+  if (data.ok) GRADES = data.grades;
+  renderGradesList();
+  fillGradeSelects();
+}
+
+async function loadSubjects() {
+  const res = await fetch(`${API_BASE}/subjects.php`);
+  const data = await res.json();
+  if (data.ok) SUBJECTS = data.subjects;
+  renderSubjectsList();
+  fillSubjectSelects();
+}
+
+function renderGradesList() {
+  const wrap = document.getElementById("gradesList");
+  if (!GRADES.length) { wrap.innerHTML = `<p class="text-xs text-slate-500">لسه مفيش صفوف مضافة.</p>`; return; }
+  wrap.innerHTML = GRADES.map(g => `
+    <div class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-800/40 px-3 py-1.5 text-xs">
+      <span>${g.name} <span class="text-slate-500">— ${g.stage}</span></span>
+      <button data-id="${g.id}" class="delGradeBtn text-rose-400 hover:text-rose-300">حذف</button>
+    </div>`).join("");
+  wrap.querySelectorAll(".delGradeBtn").forEach(btn => btn.addEventListener("click", async () => {
+    if (!confirm("متأكد إنك عايز تحذف الصف ده؟ أي محتوى مرتبط بيه هيفضل موجود لكن من غير صف.")) return;
+    await fetch(`${API_BASE}/admin/delete_grade.php`, {
+      method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ id: +btn.dataset.id }),
+    });
+    loadGrades();
+  }));
+}
+
+function renderSubjectsList() {
+  const wrap = document.getElementById("subjectsList");
+  if (!SUBJECTS.length) { wrap.innerHTML = `<p class="text-xs text-slate-500">لسه مفيش مواد مضافة.</p>`; return; }
+  wrap.innerHTML = SUBJECTS.map(s => `
+    <div class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-800/40 px-3 py-1.5 text-xs">
+      <span>${s.name}</span>
+      <button data-id="${s.id}" class="delSubjectBtn text-rose-400 hover:text-rose-300">حذف</button>
+    </div>`).join("");
+  wrap.querySelectorAll(".delSubjectBtn").forEach(btn => btn.addEventListener("click", async () => {
+    if (!confirm("متأكد إنك عايز تحذف المادة دي؟ أي محتوى مرتبط بيها هيفضل موجود لكن من غير مادة.")) return;
+    await fetch(`${API_BASE}/admin/delete_subject.php`, {
+      method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ id: +btn.dataset.id }),
+    });
+    loadSubjects();
+  }));
+}
+
+function fillGradeSelects() {
+  const opts = GRADES.map(g => `<option value="${g.id}">${g.name}</option>`).join("");
+  ["vGrade", "lGrade", "importGrade"].forEach(id => { document.getElementById(id).innerHTML = opts; });
+}
+function fillSubjectSelects() {
+  const opts = SUBJECTS.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
+  ["vSubject", "lSubject", "importSubject"].forEach(id => { document.getElementById(id).innerHTML = opts; });
+}
+
+document.getElementById("addGradeBtn").addEventListener("click", async () => {
+  const name = document.getElementById("gName").value.trim();
+  const stage = document.getElementById("gStage").value;
+  if (!name) return;
+  const res = await fetch(`${API_BASE}/admin/add_grade.php`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ name, stage }),
+  });
+  const data = await res.json();
+  const msg = document.getElementById("gradeMsg");
+  msg.textContent = data.ok ? "تمت الإضافة ✅" : (data.error || "حصل خطأ");
+  msg.className = "mt-2 text-xs " + (data.ok ? "text-teal-400" : "text-rose-400");
+  if (data.ok) { document.getElementById("gName").value = ""; loadGrades(); }
+});
+
+document.getElementById("addSubjectBtn").addEventListener("click", async () => {
+  const name = document.getElementById("sName").value.trim();
+  const icon = document.getElementById("sIcon").value.trim() || "📘";
+  if (!name) return;
+  const res = await fetch(`${API_BASE}/admin/add_subject.php`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ name, icon }),
+  });
+  const data = await res.json();
+  const msg = document.getElementById("subjectMsg");
+  msg.textContent = data.ok ? "تمت الإضافة ✅" : (data.error || "حصل خطأ");
+  msg.className = "mt-2 text-xs " + (data.ok ? "text-teal-400" : "text-rose-400");
+  if (data.ok) { document.getElementById("sName").value = ""; document.getElementById("sIcon").value = ""; loadSubjects(); }
+});
+
+document.getElementById("adminLoginBtn").addEventListener("click", async () => {
+  const email = document.getElementById("adminEmailInput").value.trim();
+  const pw = document.getElementById("adminKeyInput").value;
+  if (!email || !pw) return;
+  try { await adminSignIn(email, pw); showDashboard(); } catch (e) { showLogin(e.message); }
+});
+document.getElementById("adminKeyInput").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") document.getElementById("adminLoginBtn").click();
+});
+document.getElementById("logoutAdminBtn").addEventListener("click", async () => { await adminSignOut(); showLogin(); });
+
+document.getElementById("addVideoBtn").addEventListener("click", async () => {
+  const body = {
+    title: document.getElementById("vTitle").value,
+    gradeId: document.getElementById("vGrade").value,
+    subjectId: document.getElementById("vSubject").value,
+    academicYear: document.getElementById("vYear").value,
+    unit: document.getElementById("vUnit").value,
+    duration: document.getElementById("vDuration").value,
+    level: document.getElementById("vLevel").value,
+    free: document.getElementById("vFree").checked,
+    url: document.getElementById("vUrl").value,
+  };
+  const res = await fetch(`${API_BASE}/admin/add_video.php`, {
+    method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(body),
+  });
+  const data = await res.json();
+  const msg = document.getElementById("videoMsg");
+  msg.textContent = data.ok ? "تمت الإضافة ✅" : (data.error || "حصل خطأ");
+  msg.className = "mt-2 text-xs " + (data.ok ? "text-teal-400" : "text-rose-400");
+  if (data.ok) { document.getElementById("vTitle").value = ""; document.getElementById("vUrl").value = ""; document.getElementById("vDuration").value = ""; document.getElementById("vYear").value = ""; document.getElementById("vUnit").value = ""; }
+});
+
+let lMode = "url";
+function setLibMode(mode) {
+  lMode = mode;
+  document.getElementById("lUrl").classList.toggle("hidden", mode !== "url");
+  document.getElementById("lFilesInput").classList.toggle("hidden", mode !== "file");
+  document.getElementById("lModeUrlBtn").className = "rounded-lg px-3 py-1.5 text-xs font-bold " + (mode === "url" ? "bg-teal-500 text-slate-950" : "border border-slate-700 text-slate-300 hover:bg-slate-800");
+  document.getElementById("lModeFileBtn").className = "rounded-lg px-3 py-1.5 text-xs font-bold " + (mode === "file" ? "bg-teal-500 text-slate-950" : "border border-slate-700 text-slate-300 hover:bg-slate-800");
+}
+document.getElementById("lModeUrlBtn").addEventListener("click", () => setLibMode("url"));
+document.getElementById("lModeFileBtn").addEventListener("click", () => setLibMode("file"));
+
+function resetLibForm() {
+  document.getElementById("lTitle").value = "";
+  document.getElementById("lUrl").value = "";
+  document.getElementById("lYear").value = "";
+  document.getElementById("lUnit").value = "";
+  document.getElementById("lFilesInput").value = "";
+}
+
+document.getElementById("addLibBtn").addEventListener("click", async () => {
+  const msg = document.getElementById("libMsg");
+  const gradeId = document.getElementById("lGrade").value;
+  const subjectId = document.getElementById("lSubject").value;
+  const academicYear = document.getElementById("lYear").value;
+  const unit = document.getElementById("lUnit").value;
+  const type = document.getElementById("lType").value;
+  const free = document.getElementById("lFree").checked;
+  const titlePrefix = document.getElementById("lTitle").value.trim();
+
+  if (lMode === "url") {
+    const url = document.getElementById("lUrl").value.trim();
+    if (!titlePrefix || !url) {
+      msg.textContent = "لازم تدخل عنوان ورابط.";
+      msg.className = "mt-2 text-xs text-rose-400";
+      return;
+    }
+    try {
+      const data = await addLibraryItemWithRetry({ title: titlePrefix, gradeId, subjectId, academicYear, unit, type, free, url });
+      msg.textContent = data.ok ? "تمت الإضافة ✅" : (data.error || "حصل خطأ");
+      msg.className = "mt-2 text-xs " + (data.ok ? "text-teal-400" : "text-rose-400");
+      if (data.ok) { resetLibForm(); loadLibrary(); }
+    } catch (e) {
+      msg.textContent = "❌ " + (e.message || "فشل الاتصال بالسيرفر");
+      msg.className = "mt-2 text-xs text-rose-400";
+    }
+    return;
+  }
+
+  // وضع رفع الملفات: يدعم أكتر من ملف مرة واحدة
+  const files = Array.from(document.getElementById("lFilesInput").files || []);
+  if (!files.length) {
+    msg.textContent = "اختار ملف واحد على الأقل.";
+    msg.className = "mt-2 text-xs text-rose-400";
+    return;
+  }
+
+  let okCount = 0, failCount = 0, done = 0;
+  const failures = [], MAX_MB = 0, POOL = 3;
+  const bar = document.getElementById("libBar") || (() => { const d = document.createElement("div"); d.id = "libBar"; d.setAttribute("role", "progressbar");
+    d.style.cssText = "height:6px;margin-top:8px;background:var(--mut);overflow:hidden;border-radius:3px"; d.innerHTML = '<div style="height:100%;width:0;background:var(--blue);transition:width .2s"></div>'; msg.after(d); return d; })();
+  bar.style.display = "block";
+  const paint = () => { const p = Math.round(done / files.length * 100); msg.textContent = `جاري الرفع… ${done} من ${files.length} (${p}%)`; msg.className = "mt-2 text-xs text-slate-400"; bar.firstElementChild.style.width = p + "%"; bar.setAttribute("aria-valuenow", p); };
+  const queue = files.slice();
+  async function worker() {
+    while (queue.length) {
+      const file = queue.shift();
+      const title = titlePrefix ? `${titlePrefix} - ${stripExt(file.name)}` : stripExt(file.name);
+      try {
+        if (MAX_MB && file.size > MAX_MB * 1048576) throw new Error(`الحجم أكبر من ${MAX_MB}MB`);
+        const url = await uploadFile(file, 2, 500);
+        const data = await addLibraryItemWithRetry({ title, gradeId, subjectId, academicYear, unit, type, free, url }, 2, 500);
+        if (data.ok) okCount++; else { failCount++; failures.push({ name: file.name, reason: data.error || "فشل غير معروف" }); }
+      } catch (e) { failCount++; failures.push({ name: file.name, reason: e.message || "فشل الرفع" }); }
+      done++; paint();
+    }
+  }
+  paint();
+  await Promise.all(Array.from({ length: Math.min(POOL, files.length) }, worker));
+  setTimeout(() => { bar.style.display = "none"; }, 1500);
+  msg.innerHTML = `تم رفع ${okCount} ملف` + (failCount ? ` — فشل ${failCount}` : "");
+  msg.className = "mt-2 text-xs " + (failCount ? "text-amber-400" : "text-teal-400");
+  const detailsBox = document.getElementById("libFailDetails");
+  if (failures.length) {
+    detailsBox.classList.remove("hidden");
+    detailsBox.innerHTML = failures.map(f => `<div class="truncate"><span class="text-slate-300">${f.name}</span>: ${f.reason}</div>`).join("");
+  } else {
+    detailsBox.classList.add("hidden");
+    detailsBox.innerHTML = "";
+  }
+  resetLibForm();
+  loadLibrary();
+});
+
+/* =====================================================
+   الكتب/الملفات الموجودة على السيرفر
+===================================================== */
+let LIBRARY_ITEMS = [];
+let librarySearch = "";
+
+async function loadLibrary() {
+  const res = await fetch(`${API_BASE}/library.php`);
+  const data = await res.json();
+  if (data.ok) LIBRARY_ITEMS = data.items || [];
+  renderLibraryList();
+}
+
+function renderLibraryList() {
+  const wrap = document.getElementById("libraryListWrap");
+  const empty = document.getElementById("libraryListEmpty");
+  let rows = LIBRARY_ITEMS;
+  if (librarySearch) {
+    const q = librarySearch.toLowerCase();
+    rows = rows.filter(i => (i.title || "").toLowerCase().includes(q));
+  }
+  if (!rows.length) {
+    wrap.innerHTML = "";
+    empty.classList.remove("hidden");
+    return;
+  }
+  empty.classList.add("hidden");
+  wrap.innerHTML = rows.map(i => `
+    <div class="fade-in flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-800/40 px-3 py-2 text-xs">
+      <div class="min-w-0 flex-1">
+        <p class="truncate font-bold text-slate-200">${i.title}</p>
+        <p class="mt-0.5 text-slate-500">
+          ${i.gradeName || "بدون صف"} · ${i.subjectIcon || ""} ${i.subjectName || "بدون مادة"}${i.unit ? " · " + i.unit : ""}${i.academicYear ? " · " + i.academicYear : ""}${i.type ? " · " + i.type : ""} ·
+          ${i.free ? '<span class="text-teal-400">مجاني</span>' : '<span class="text-amber-400">مدفوع</span>'}
+        </p>
+      </div>
+      <div class="flex shrink-0 items-center gap-2">
+        <a href="${i.url}" target="_blank" class="text-teal-400 underline">فتح</a>
+        <button data-id="${i.id}" class="delLibItemBtn text-rose-400 hover:text-rose-300">حذف</button>
+      </div>
+    </div>`).join("");
+  wrap.querySelectorAll(".delLibItemBtn").forEach(btn => btn.addEventListener("click", async () => {
+    if (!confirm("متأكد إنك عايز تحذف الملف ده؟")) return;
+    await fetch(`${API_BASE}/admin/delete_library.php`, {
+      method: "POST", headers: authHeaders({ "Content-Type": "application/json" }), body: JSON.stringify({ id: +btn.dataset.id }),
+    });
+    loadLibrary();
+  }));
+}
+
+document.getElementById("libSearch").addEventListener("input", (e) => {
+  librarySearch = e.target.value.trim();
+  renderLibraryList();
+});
+
+/* =====================================================
+   رفع ذكي متعدد: يرتب حسب اسم الملف (الصف - المادة - العنوان)
+===================================================== */
+let bulkRows = [];
+
+function normalizeAr(s) {
+  return (s || "").toString().trim().toLowerCase()
+    .replace(/[إأآا]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه").replace(/\s+/g, " ");
+}
+function findGradeMatch(text) {
+  const n = normalizeAr(text);
+  if (!n) return null;
+  return GRADES.find(g => normalizeAr(g.name) === n)
+      || GRADES.find(g => normalizeAr(g.name).includes(n) || n.includes(normalizeAr(g.name)))
+      || null;
+}
+function findSubjectMatch(text) {
+  const n = normalizeAr(text);
+  if (!n) return null;
+  return SUBJECTS.find(s => normalizeAr(s.name) === n)
+      || SUBJECTS.find(s => normalizeAr(s.name).includes(n) || n.includes(normalizeAr(s.name)))
+      || null;
+}
+function parseBulkFilename(name) {
+  const base = stripExt(name);
+  const parts = base.split("-").map(p => p.trim()).filter(Boolean);
+  const gradeText = parts[0] || "";
+  const subjectText = parts[1] || "";
+  const title = parts.length > 2 ? parts.slice(2).join(" - ") : base;
+  return { gradeText, subjectText, title };
+}
+
+function handleBulkFiles(fileList) {
+  const files = Array.from(fileList || []).filter(f => !f.name.startsWith("."));
+  if (!files.length) return;
+  bulkRows = files.map(file => {
+    const { gradeText, subjectText, title } = parseBulkFilename(file.name);
+    const gMatch = findGradeMatch(gradeText);
+    const sMatch = findSubjectMatch(subjectText);
+    return {
+      file, title,
+      gradeId: gMatch ? String(gMatch.id) : "",
+      subjectId: sMatch ? String(sMatch.id) : "",
+      type: /\.(mp4|mov|mkv)$/i.test(file.name) ? "فيديو" : "ملف PDF",
+      status: "idle",
+    };
+  });
+  renderBulkPreview();
+  document.getElementById("bulkPreviewWrap").classList.remove("hidden");
+  document.getElementById("bulkMsg").textContent = "";
+}
+
+document.getElementById("bulkFilesInput").addEventListener("change", (e) => handleBulkFiles(e.target.files));
+document.getElementById("bulkFolderInput").addEventListener("change", (e) => handleBulkFiles(e.target.files));
+
+function renderBulkPreview() {
+  const body = document.getElementById("bulkPreviewBody");
+  const gradeOpts = GRADES.map(g => `<option value="${g.id}">${g.name}</option>`).join("");
+  const subjectOpts = SUBJECTS.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
+  body.innerHTML = bulkRows.map((r, idx) => `
+    <tr class="border-t border-slate-800">
+      <td class="max-w-[160px] truncate px-3 py-2 text-slate-400" title="${r.file.name}">${r.file.name}</td>
+      <td class="px-3 py-2"><input data-idx="${idx}" data-field="title" value="${r.title}" class="bulkField w-40 rounded border border-slate-700 bg-slate-800 px-2 py-1" /></td>
+      <td class="px-3 py-2">
+        <select data-idx="${idx}" data-field="gradeId" class="bulkField rounded border ${r.gradeId ? "border-slate-700" : "border-amber-500"} bg-slate-800 px-2 py-1">
+          <option value="">— اختر —</option>${gradeOpts}
+        </select>
+      </td>
+      <td class="px-3 py-2">
+        <select data-idx="${idx}" data-field="subjectId" class="bulkField rounded border ${r.subjectId ? "border-slate-700" : "border-amber-500"} bg-slate-800 px-2 py-1">
+          <option value="">— اختر —</option>${subjectOpts}
+        </select>
+      </td>
+      <td class="px-3 py-2"><input data-idx="${idx}" data-field="type" value="${r.type}" class="bulkField w-24 rounded border border-slate-700 bg-slate-800 px-2 py-1" /></td>
+      <td class="bulkStatus px-3 py-2 text-slate-400">بانتظار التأكيد</td>
+    </tr>`).join("");
+
+  body.querySelectorAll("select[data-field='gradeId']").forEach(sel => { sel.value = bulkRows[+sel.dataset.idx].gradeId; });
+  body.querySelectorAll("select[data-field='subjectId']").forEach(sel => { sel.value = bulkRows[+sel.dataset.idx].subjectId; });
+
+  body.querySelectorAll(".bulkField").forEach(el => el.addEventListener("input", (e) => {
+    const idx = +e.target.dataset.idx, field = e.target.dataset.field;
+    bulkRows[idx][field] = e.target.value;
+  }));
+}
+
+document.getElementById("bulkCancelBtn").addEventListener("click", () => {
+  bulkRows = [];
+  document.getElementById("bulkPreviewWrap").classList.add("hidden");
+  document.getElementById("bulkFilesInput").value = "";
+  document.getElementById("bulkFolderInput").value = "";
+  document.getElementById("bulkMsg").textContent = "";
+});
+
+/**
+ * الاستضافة المجانية (InfinityFree) بترفض / بتقطع أي طلبات كتير وسريعة
+ * جاية فوق بعض من نفس الجهاز، والرد بيرجع فاضي تماماً فبيفشل res.json()
+ * برسالة "Unexpected end of JSON input" — ده مش خطأ في الكود، ده حماية
+ * الاستضافة من "التزاحم". الحل: نسيب فاصل زمني بين كل طلب والتالي،
+ * ونعيد المحاولة تلقائياً لو الرد رجع فاضي أو مش JSON صحيح.
+ */
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function parseJsonResponse(res) {
+  const text = await res.text();
+  if (!text) {
+    throw new Error(`رد فاضي من السيرفر (HTTP ${res.status}) — غالباً حماية الاستضافة من الطلبات السريعة`);
+  }
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error(`رد غير متوقع من السيرفر: ${text.slice(0, 140)}`);
+  }
+}
+
+async function addLibraryItemWithRetry(payload, tries = 4, baseDelayMs = 800) {
+  let lastErr;
+  for (let attempt = 1; attempt <= tries; attempt++) {
+    try {
+      const res = await fetch(`${API_BASE}/admin/add_library.php`, {
+        method: "POST", headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify(payload),
+      });
+      return await parseJsonResponse(res);
+    } catch (e) {
+      lastErr = e;
+      if (attempt < tries) await sleep(baseDelayMs * attempt); // كل محاولة تنتظر أكتر من اللي قبلها
+    }
+  }
+  throw lastErr;
+}
+
+document.getElementById("bulkConfirmBtn").addEventListener("click", async () => {
+  if (!bulkRows.length) return;
+  const missing = bulkRows.some(r => !r.gradeId || !r.subjectId);
+  if (missing && !confirm("في ملفات من غير صف أو مادة محددة، هيتحفظوا من غيرهم. عايز تكمل؟")) return;
+
+  const free = document.getElementById("bulkFree").checked;
+  const msg = document.getElementById("bulkMsg");
+  const statusCells = document.querySelectorAll(".bulkStatus");
+  let ok = 0, fail = 0;
+
+  for (let i = 0; i < bulkRows.length; i++) {
+    const r = bulkRows[i];
+    statusCells[i].textContent = "⏳ جاري الرفع...";
+    statusCells[i].className = "bulkStatus px-3 py-2 text-amber-400";
+    try {
+      const url = await uploadFile(r.file);
+      const data = await addLibraryItemWithRetry({ title: r.title, gradeId: r.gradeId, subjectId: r.subjectId, academicYear: "", unit: "", type: r.type, free, url });
+      if (data.ok) {
+        ok++;
+        statusCells[i].textContent = "✅ تم";
+        statusCells[i].className = "bulkStatus px-3 py-2 text-teal-400";
+      } else {
+        fail++;
+        statusCells[i].textContent = "❌ " + (data.error || "فشل");
+        statusCells[i].className = "bulkStatus px-3 py-2 text-rose-400";
+      }
+    } catch (e) {
+      fail++;
+      statusCells[i].textContent = "❌ " + (e.message || "فشل الرفع");
+      statusCells[i].className = "bulkStatus px-3 py-2 text-rose-400";
+      statusCells[i].title = e.message || "فشل الرفع";
+    }
+    await sleep(400); // فاصل بين كل ملف والتالي عشان الاستضافة المجانية
+  }
+  msg.textContent = `تم رفع ${ok} ملف بنجاح` + (fail ? ` — فشل ${fail} (شوف سبب كل ملف في عمود الحالة تحت)` : "");
+  msg.className = "text-xs " + (fail ? "text-amber-400" : "text-teal-400");
+  loadLibrary();
+});
+
+/* =====================================================
+   استيراد بالجملة من ملفين: أسماء الملفات + روابط درايف
+   (بيقرا ملفات .docx مباشرة من المتصفح عن طريق mammoth.js —
+   مفيش أي رفع فعلي للملفات، الروابط هي روابط جوجل درايف نفسها)
+===================================================== */
+let importNameLines = [];
+let importLinkLines = [];
+let importRows = [];
+
+async function readTextFromFile(file) {
+  const isDocx = /\.docx$/i.test(file.name);
+  if (isDocx) {
+    if (typeof mammoth === "undefined") throw new Error("مكتبة قراءة ملفات Word (mammoth) لسه متحمّلتش، جرّب تحدّث الصفحة");
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value || "";
+  }
+  return await file.text();
+}
+
+/** يقسّم النص لسطور، ويشيل السطور الفاضية والفواصل الزيادة في آخر كل سطر */
+function splitToLines(text) {
+  return (text || "")
+    .split(/\r?\n/)
+    .map(l => l.trim())
+    .map(l => l.replace(/[,،]\s*$/, "")) // فاصلة زيادة في آخر السطر (شائعة في ملفات اللينكات)
+    .filter(Boolean);
+}
+
+/** تنضيف بسيط لاسم الملف: شيل كلمة "pdf" وأي نقط/شرط زيادة في البداية والنهاية */
+function cleanImportedTitle(raw) {
+  let t = (raw || "").trim();
+  t = t.replace(/^(ال|ل)?\s*pdf\.?\s*/i, ""); // "pdf. " أو "ل pdf." في البداية
+  t = t.replace(/\.pdf$/i, "");               // ".pdf" في النهاية
+  t = t.replace(/\s*\.\s*$/, "");             // نقطة لوحدها في النهاية
+  t = t.replace(/\s+/g, " ").trim();
+  return t || raw.trim();
+}
+
+function updateImportFilesMsg() {
+  const el = document.getElementById("importFilesMsg");
+  if (!importNameLines.length && !importLinkLines.length) { el.textContent = ""; return; }
+  el.textContent = `أسماء: ${importNameLines.length} سطر — روابط: ${importLinkLines.length} سطر`;
+  el.className = "mt-2 text-[11px] " + (importNameLines.length && importLinkLines.length && importNameLines.length !== importLinkLines.length ? "text-amber-400" : "text-slate-500");
+}
+
+function buildImportRowsIfReady() {
+  if (!importNameLines.length || !importLinkLines.length) return;
+  const count = Math.min(importNameLines.length, importLinkLines.length);
+  importRows = [];
+  for (let i = 0; i < count; i++) {
+    importRows.push({
+      title: cleanImportedTitle(importNameLines[i]),
+      url: importLinkLines[i],
+      status: "idle",
+    });
+  }
+  renderImportPreview();
+  document.getElementById("importPreviewWrap").classList.remove("hidden");
+  document.getElementById("importMsg").textContent = "";
+}
+
+document.getElementById("importNamesInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    importNameLines = splitToLines(await readTextFromFile(file));
+  } catch (err) {
+    document.getElementById("importFilesMsg").textContent = "تعذّر قراءة ملف الأسماء: " + err.message;
+    document.getElementById("importFilesMsg").className = "mt-2 text-[11px] text-rose-400";
+    return;
+  }
+  updateImportFilesMsg();
+  buildImportRowsIfReady();
+});
+
+document.getElementById("importLinksInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    importLinkLines = splitToLines(await readTextFromFile(file));
+  } catch (err) {
+    document.getElementById("importFilesMsg").textContent = "تعذّر قراءة ملف الروابط: " + err.message;
+    document.getElementById("importFilesMsg").className = "mt-2 text-[11px] text-rose-400";
+    return;
+  }
+  updateImportFilesMsg();
+  buildImportRowsIfReady();
+});
+
+function renderImportPreview() {
+  const body = document.getElementById("importPreviewBody");
+  body.innerHTML = importRows.map((r, idx) => `
+    <tr class="border-t border-slate-800">
+      <td class="px-3 py-2 text-slate-500">${idx + 1}</td>
+      <td class="px-3 py-2"><input data-idx="${idx}" class="importTitleField w-64 rounded border border-slate-700 bg-slate-800 px-2 py-1" value="${r.title.replace(/"/g, "&quot;")}" /></td>
+      <td class="max-w-[220px] truncate px-3 py-2 text-slate-400"><a href="${r.url}" target="_blank" class="hover:text-teal-400" title="${r.url}">${r.url}</a></td>
+      <td class="importStatus px-3 py-2 text-slate-400">بانتظار التأكيد</td>
+    </tr>`).join("");
+
+  body.querySelectorAll(".importTitleField").forEach(el => el.addEventListener("input", (e) => {
+    importRows[+e.target.dataset.idx].title = e.target.value;
+  }));
+}
+
+document.getElementById("importCancelBtn").addEventListener("click", () => {
+  importNameLines = [];
+  importLinkLines = [];
+  importRows = [];
+  document.getElementById("importNamesInput").value = "";
+  document.getElementById("importLinksInput").value = "";
+  document.getElementById("importFilesMsg").textContent = "";
+  document.getElementById("importPreviewWrap").classList.add("hidden");
+});
+
+document.getElementById("importConfirmBtn").addEventListener("click", async () => {
+  if (!importRows.length) return;
+  const gradeId = document.getElementById("importGrade").value;
+  const subjectId = document.getElementById("importSubject").value;
+  const academicYear = document.getElementById("importYear").value.trim();
+  const type = document.getElementById("importType").value.trim() || "ملف PDF";
+  const free = document.getElementById("importFree").checked;
+
+  if (!subjectId) { alert("اختار المادة أولاً"); return; }
+
+  const msg = document.getElementById("importMsg");
+  const statusCells = document.querySelectorAll(".importStatus");
+  let ok = 0, fail = 0;
+
+  for (let i = 0; i < importRows.length; i++) {
+    const r = importRows[i];
+    statusCells[i].textContent = "⏳ جاري الإضافة...";
+    statusCells[i].className = "importStatus px-3 py-2 text-amber-400";
+    try {
+      const data = await addLibraryItemWithRetry({ title: r.title, gradeId, subjectId, academicYear, unit: "", type, free, url: r.url });
+      if (data.ok) {
+        ok++;
+        statusCells[i].textContent = "✅ تم";
+        statusCells[i].className = "importStatus px-3 py-2 text-teal-400";
+      } else {
+        fail++;
+        statusCells[i].textContent = "❌ " + (data.error || "فشل");
+        statusCells[i].className = "importStatus px-3 py-2 text-rose-400";
+      }
+    } catch (e) {
+      fail++;
+      statusCells[i].textContent = "❌ " + (e.message || "فشل");
+      statusCells[i].className = "importStatus px-3 py-2 text-rose-400";
+    }
+    await sleep(400); // فاصل بين كل عنصر والتالي عشان الاستضافة المجانية
+  }
+  msg.textContent = `تم إضافة ${ok} عنصر بنجاح` + (fail ? ` — فشل ${fail} (شوف السبب في عمود الحالة)` : "");
+  msg.className = "text-xs " + (fail ? "text-amber-400" : "text-teal-400");
+  loadLibrary();
+});
+
+adminSession().then(ok => ok ? showDashboard() : showLogin());
+
+
+</script>
+</body>
+</html>
