@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://ilogia-eg.com/sitemap.xml
