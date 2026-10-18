@@ -1,0 +1,7 @@
+# Netlify / Cloudflare Pages — clean URLs
+/login     /login.html     200
+/setup     /setup.html     200
+/profile   /profile.html   200
+/admin     /admin.html     200
+/teacher   /teacher.html   200
+/verify    /verify.html    200
