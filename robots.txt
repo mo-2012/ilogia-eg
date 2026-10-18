@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /verify
+Disallow: /admin
+Disallow: /teacher
+Disallow: /profile
+Disallow: /setup
+Disallow: /login

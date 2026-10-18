@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>التحقق من شهادة — ilogia</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
+<link rel="stylesheet" href="ilogia-ds.css">
+</head>
+<body>
+<header class="top"><div class="w in">
+  <a class="brand" href="index.html" aria-label="ilogia"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b><small>منصة تعليمية عربية</small></span></a>
+  <nav class="pillnav" id="nav" aria-label="التنقل الرئيسي"><a href="index.html">الرئيسية</a><a href="index.html#videos">الدروس</a><a href="index.html#library">المكتبة</a><a href="index.html#plans">الباقات</a><a href="verify.html" aria-current="page">التحقق من الشهادات</a></nav>
+  <div class="acts"><a class="btn s" href="login.html"><span class="ms" aria-hidden="true">login</span>حسابي</a></div>
+  <button class="btn g s menu" type="button" aria-label="القائمة" aria-controls="nav" aria-expanded="false" onclick="var n=document.getElementById('nav');this.setAttribute('aria-expanded',n.classList.toggle('open'))"><span class="ms" aria-hidden="true">menu</span></button>
+</div></header>
+<section class="vhero"><span class="badge" style="margin-block-end:var(--sp-4)"><span class="ms" style="font-size:16px" aria-hidden="true">verified_user</span>التحقق من الشهادات</span>
+  <h1>التحقق الفوري من صحة الشهادة</h1><p>اكتب رقم الشهادة المطبوع أسفلها للتأكد من صحتها ومطابقتها لسجلات المنصة.</p>
+  <form class="search" id="f"><input id="q" placeholder="ILG-2026-XXXXXXXXXXXX" autocomplete="off" spellcheck="false" aria-label="رقم الشهادة"><button class="btn" type="submit">تحقّق من الشهادة<span class="ms" aria-hidden="true">arrow_back</span></button></form></section>
+<main class="v-main">
+  <div id="st" class="v-status" role="status"><span class="ms f" id="ic" aria-hidden="true"></span><div><b id="stT"></b><span class="s" id="stS"></span></div><span class="state" id="stState" hidden></span></div>
+  <p id="msg"></p>
+  <div class="v-grid" id="result">
+    <div><div id="stage"><div id="scaler"></div></div></div>
+    <aside style="display:grid;gap:var(--sp-4)">
+      <div class="card record" id="rec" hidden style="margin:0"><span class="badge">سجل المنصة</span><h2 style="margin-block-start:var(--sp-2)">بيانات الشهادة</h2>
+        <dl><div class="cell"><dt>اسم الطالب</dt><dd id="rStudent"></dd></div>
+        <div class="row2"><div class="cell"><dt>رقم الشهادة</dt><dd class="mono" id="rSerial"></dd></div><div class="cell"><dt>تاريخ الإصدار</dt><dd id="rIssued"></dd></div></div>
+        <div class="cell"><dt>المادة</dt><dd id="rSubject"></dd></div><div class="cell"><dt>الصف / الفصل</dt><dd id="rTerm"></dd></div>
+        <div class="row2"><div class="cell"><dt>الدروس المنجزة</dt><dd id="rLessons"></dd></div><div class="cell"><dt>ساعات المذاكرة</dt><dd id="rHours"></dd></div></div></dl></div>
+      <div class="card" style="margin:0"><h3>الإجراءات</h3><div class="acts" id="acts"><button class="btn" id="bPdf"><span class="ms" aria-hidden="true">picture_as_pdf</span>تحميل PDF</button><button class="btn g" id="bImg"><span class="ms" aria-hidden="true">image</span>تحميل صورة</button><button class="btn g" id="bPrint"><span class="ms" aria-hidden="true">print</span>طباعة</button><button class="btn g" id="bCopy"><span class="ms" aria-hidden="true">link</span>نسخ رابط التحقق</button></div></div>
+    </aside>
+  </div>
+</main>
+<footer class="foot-site"><div class="w"><div class="cols"><div><a class="brand" href="index.html" style="margin:0 0 var(--sp-3)"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b></span></a><p>منصة تعليمية عربية تقدّم دروسًا مصوّرة ومراجع دراسية حسب الصف والمادة.</p></div><div><h4>المنصة</h4><a href="index.html#videos">الدروس</a><a href="index.html#library">المكتبة</a><a href="index.html#plans">الباقات</a></div><div><h4>حسابك</h4><a href="login.html">تسجيل الدخول</a><a href="profile.html">ملفي</a></div></div><div class="base"><span>© ilogia — جميع الحقوق محفوظة</span><a href="verify.html">التحقق من الشهادات</a></div></div></footer>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+const sb=createClient('https://zugwicbbfbefbbwugfxq.supabase.co','sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};   // textContent only: names are user data
+const hoursText=s=>{s=Math.max(0,Math.round(+s||0));const h=Math.floor(s/3600),m=Math.round(s%3600/60);if(!h&&!m)return 'أقل من دقيقة';if(!h)return AR(m)+' دقيقة';return AR(h)+' ساعة'+(m?' و'+AR(m)+' دقيقة':'')};
+const dateText=iso=>AR(new Date(iso).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'}));
+const verifyUrl=(s,base)=>(base||location.origin).replace(/\/+$/,'')+'/verify.html?c='+encodeURIComponent(s);
+let current=null;
+const loadScript=u=>new Promise((res,rej)=>{if(document.querySelector(`script[src="${u}"]`))return res();const s=document.createElement('script');s.src=u;s.onload=res;s.onerror=()=>rej(new Error('load '+u));document.head.append(s)});
+
+async function qrSrc(text){await loadScript('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js');
+  const q=qrcode(0,'M');q.addData(text);q.make();const n=q.getModuleCount(),cell=8,m=2,size=(n+m*2)*cell,cv=document.createElement('canvas');cv.width=cv.height=size;
+  const x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,size,size);x.fillStyle='#192428';
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))x.fillRect((c+m)*cell,(r+m)*cell,cell,cell);return cv.toDataURL('image/png')}
+
+async function buildCert(c){const el=mk('div','cert');el.append(mk('div','grid'),mk('div','f1'),mk('div','f2'));
+  [['c1','#0E5040','0,0 70,0 70,70'],['c2','#0E5040','0,0 0,70 70,70'],['c3','#D4AF37','0,0 70,0 0,70'],['c4','#D4AF37','70,0 70,70 0,70']].forEach(([k,f,pts])=>{
+    const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('class','corner '+k);s.setAttribute('viewBox','0 0 70 70');
+    const p=document.createElementNS('http://www.w3.org/2000/svg','polygon');p.setAttribute('points',pts);p.setAttribute('fill',f);s.append(p);el.append(s)});
+  const lg=mk('div','t logo');const im=mk('div','lm');im.style.cssText='width:60px;height:60px;border-radius:10px;background:#136F58;display:grid;place-items:center';im.innerHTML='<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/><path d="M22 9v6"/></svg>';lg.append(mk('span',null,c.site_name||'ilogia'),im);
+  const site=c.site_name||'ilogia';
+  el.append(lg,mk('div','t h1','شهادة إتمام'),mk('div','t s1','تشهد منصة '+site+' بأن الطالب / الطالبة'),mk('div','t nm',c.student_name),mk('div','ul'),
+    mk('div','t s2','قد أتمّ بنجاح دراسة مادة'),mk('div','t sb',c.subject_name),mk('div','t s3',[c.grade_name,c.term].filter(Boolean).join(' — ')));
+  const bx=mk('div','boxes');
+  [[AR(c.lessons_completed)+' / '+AR(c.lessons_total),'عدد الدروس المنجزة'],[hoursText(c.study_seconds),'ساعات المذاكرة'],[dateText(c.issued_at),'تاريخ الإصدار']].forEach(([a,b])=>{const d=mk('div','box');d.append(mk('b',null,a),mk('span',null,b));bx.append(d)});
+  el.append(bx);
+  const qr=mk('div','qr'),qi=mk('img');qi.alt='باركود التحقق';qi.src=await qrSrc(verifyUrl(c.serial,c.site_url));
+  const qp=mk('p');qp.append(mk('b',null,'تحقّق من صحة الشهادة'),document.createElement('br'),document.createTextNode('امسح الباركود، أو ادخل على '+(c.site_url||location.origin).replace(/^https?:\/\//,'').replace(/\/+$/,'')+'/verify وأدخل رقم الشهادة'));
+  qr.append(qi,qp);
+  const sg=mk('div','sig');sg.append(mk('div','seal',site),mk('i'),mk('span',null,'إدارة منصة '+site));
+  const sn=mk('div','sn');sn.append(mk('span',null,'رقم الشهادة'),mk('b',null,c.serial));
+  el.append(qr,sg,sn);if(c.revoked)el.append(mk('div','rev','ملغاة'));
+  if(document.fonts&&document.fonts.ready)await document.fonts.ready;return el}
+
+function fit(){const st=$('#stage'),sc=$('#scaler');const cs=getComputedStyle(st),k=Math.min(1,(st.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight))/1123);
+  sc.style.transform=`scale(${k})`;st.style.blockSize=(794*k+parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom))+'px'}
+addEventListener('resize',fit);
+
+const ICONS={ok:'verified',bad:'gpp_bad'};
+function status(kind,t,s,state){const e=$('#st');e.className='v-status '+kind;$('#stT').textContent=t;$('#stS').textContent=s||'';$('#ic').textContent=ICONS[kind];$('#stState').textContent=state||'';$('#stState').hidden=!state}
+async function check(raw){const serial=String(raw||'').trim().toUpperCase();$('#msg').textContent='';
+  $('#acts').classList.remove('on');$('#stage').classList.remove('on');$('#result').classList.remove('on');$('#rec').hidden=true;current=null;$('#st').className='v-status';
+  if(!/^ILG-\d{4}-[A-Z0-9]{12}$/.test(serial)){status('bad','رقم الشهادة غير صحيح','اكتب الرقم كما هو مطبوع على الشهادة، مثال: ILG-2026-XXXXXXXXXXXX');return}
+  $('#msg').textContent='جاري التحقق...';
+  let r;try{r=await sb.rpc('verify_certificate',{p_serial:serial})}catch(x){r={error:x}}
+  $('#msg').textContent='';
+  if(r.error){status('bad','تعذّر التحقق الآن','تأكد من الاتصال بالإنترنت وحاول مرة أخرى');return}
+  const c=(r.data||[])[0];if(!c){status('bad','شهادة غير موجودة','لا توجد شهادة بهذا الرقم في سجلات المنصة');return}
+  current=c;history.replaceState(null,'','?c='+encodeURIComponent(c.serial));
+  if(c.revoked)status('bad','هذه الشهادة ملغاة','تم إلغاؤها من إدارة المنصة ولم تعد صالحة.','حالة الشهادة: ملغاة');
+  else status('ok','شهادة موثّقة وصحيحة','صادرة عن منصة '+(c.site_name||'ilogia')+' للطالب: '+c.student_name,'حالة الشهادة: سارية');
+  fillRecord(c);
+  const sc=$('#scaler');sc.replaceChildren(await buildCert(c));$('#result').classList.add('on');$('#rec').hidden=false;$('#stage').classList.add('on');$('#acts').classList.add('on');fit()}
+function fillRecord(c){const set=(id,v)=>{$('#'+id).textContent=v||'—'};set('rStudent',c.student_name);set('rSerial',c.serial);set('rIssued',dateText(c.issued_at));set('rSubject',c.subject_name);set('rTerm',[c.grade_name,c.term].filter(Boolean).join(' — '));set('rLessons',AR(c.lessons_completed)+' / '+AR(c.lessons_total));set('rHours',hoursText(c.study_seconds))}
+
+async function exportCanvas(){await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+  const host=mk('div');host.style.cssText='position:fixed;left:-99999px;top:0';const el=await buildCert(current);host.append(el);document.body.append(host);
+  try{return await html2canvas(el,{scale:2,backgroundColor:'#FFFEF9',useCORS:true,width:1123,height:794})}finally{host.remove()}}
+const dl=(href,name)=>{const a=document.createElement('a');a.href=href;a.download=name;document.body.append(a);a.click();a.remove()};
+const busy=async(b,f)=>{if(!current)return;const t=b.textContent;b.disabled=true;b.textContent='جاري التجهيز...';try{await f()}catch(x){console.error(x);$('#msg').textContent='تعذّر التجهيز، حاول مرة أخرى'}finally{b.disabled=false;b.textContent=t}};
+$('#bImg').onclick=e=>busy(e.currentTarget,async()=>{const cv=await exportCanvas();dl(cv.toDataURL('image/png'),'ilogia-certificate-'+current.serial+'.png')});
+$('#bPdf').onclick=e=>busy(e.currentTarget,async()=>{const cv=await exportCanvas();await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+  const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});pdf.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',0,0,297,210);pdf.save('ilogia-certificate-'+current.serial+'.pdf')});
+$('#bPrint').onclick=()=>{if(current)print()};
+$('#bCopy').onclick=async()=>{if(!current)return;try{await navigator.clipboard.writeText(verifyUrl(current.serial,current.site_url));$('#msg').textContent='تم نسخ رابط التحقق'}catch(x){$('#msg').textContent=verifyUrl(current.serial,current.site_url)}};
+$('#f').onsubmit=e=>{e.preventDefault();check($('#q').value)};
+const c0=new URLSearchParams(location.search).get('c');if(c0){$('#q').value=c0;check(c0)}
+</script>
+</body>
+</html>
