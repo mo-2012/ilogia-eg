@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>إعداد حسابك — ilogia</title>
+<meta name="description" content="إكمال بيانات حسابك في منصة ilogia التعليمية.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap"></noscript>
+<link rel="stylesheet" href="ilogia-ds.css">
+</head>
+<body class="center">
+<div class="shell">
+  <a class="brand" href="index.html" aria-label="ilogia"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b><small>منصة تعليمية عربية</small></span></a>
+  <main class="box">
+    <div class="load" id="loading" role="status">جارٍ تجهيز صفحة الإعداد…</div>
+
+    <section id="formView" hidden>
+      <ol class="steps" aria-label="مراحل إنشاء الحساب"><li class="done"><b><span class="ms f" aria-hidden="true">check</span></b>إنشاء الحساب</li><li class="done"><b><span class="ms f" aria-hidden="true">check</span></b>تأكيد البريد</li><li class="now" aria-current="step"><b>٣</b>إعداد الحساب</li></ol>
+      <div class="idcard"><span class="ic"><span class="ms" aria-hidden="true">badge</span></span><div><h2 id="title" tabindex="-1">أهلًا بك في ilogia</h2><p>بريدك مؤكَّد. أكمل بيانات حسابك مرة واحدة، ويمكنك تعديلها لاحقًا من «ملفي».</p></div></div>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <form id="form" novalidate>
+        <label>البريد الإلكتروني <span class="hint">من حسابك المؤكَّد، ولا يمكن تغييره من هنا</span>
+          <input id="email" type="email" readonly tabindex="-1" aria-readonly="true" dir="ltr">
+        </label>
+        <label>الاسم الكامل <span class="hint">هذا الاسم هو الذي سيظهر على شهاداتك، فاكتبه كما تريد</span>
+          <input id="name" type="text" autocomplete="name" maxlength="80" required>
+        </label>
+        <label>الصف الدراسي
+          <select id="grade" required><option value="">اختر صفّك…</option></select>
+        </label>
+        <div class="fieldmsg" id="fmsg" role="alert"></div>
+        <button class="btn" id="save" type="submit"><span id="saveText">حفظ والمتابعة</span><span class="ms" aria-hidden="true">arrow_back</span></button>
+      </form>
+      <p class="foot"><button type="button" class="lnk" id="out">تسجيل الخروج</button></p>
+    </section>
+
+    <section id="errView" hidden>
+      <h1>تعذّر تحميل الصفحة</h1>
+      <p class="sub" id="errText" style="color:var(--mut)">حدث خطأ أثناء الاتصال بالخادم.</p>
+      <button class="btn" id="retry" type="button">إعادة المحاولة</button>
+    </section>
+  </main>
+</div>
+
+<script type="module">
+import { $, getClient, safeNext, isVerified, friendly, withTimeout } from './auth-flow.js';
+
+const NEXT = safeNext(new URLSearchParams(location.search).get('next'));
+const toLogin = () => location.replace('login.html?next=' + encodeURIComponent(NEXT));
+let sb = null, user = null;
+
+const show = (id) => { for (const v of ['loading', 'formView', 'errView']) $('#' + v).hidden = v !== id; };
+const notice = (kind, text) => { const el = $('#notice'); el.replaceChildren(); if (!text) return; const d = document.createElement('div'); d.className = 'alert ' + kind; d.textContent = text; el.append(d); };
+
+async function boot() {
+  show('loading');
+  sb = sb || await getClient();
+  if (!sb) { $('#errText').textContent = 'تعذّر الاتصال بالخادم. تحقّق من الإنترنت ثم أعد المحاولة.'; return show('errView'); }
+  let session = null;
+  try { session = (await withTimeout(sb.auth.getSession(), 15000)).data.session; } catch (e) { console.warn(e); }
+  if (!session) return toLogin();                       // no session -> back to the login page
+  user = session.user;
+  if (!isVerified(user)) { try { await sb.auth.signOut(); } catch (e) { console.warn(e); } return toLogin(); }
+
+  try {
+    const [p, g] = await withTimeout(Promise.all([
+      sb.from('profiles').select('full_name,grade_id,onboarded_at').eq('id', user.id).maybeSingle(),
+      sb.from('grades').select('id,name,sort_order').order('sort_order'),
+    ]), 20000);
+    if (g.error) throw g.error;
+    const meta = user.user_metadata || {};
+    // Where the pre-filled name comes from: the saved profile, otherwise what you typed at sign-up / your Google account.
+    $('#name').value = (p.data?.full_name || meta.full_name || meta.name || '').trim();
+    $('#email').value = user.email || '';
+    const sel = $('#grade'); sel.length = 1;
+    for (const x of g.data || []) { const o = document.createElement('option'); o.value = x.id; o.textContent = x.name; sel.append(o); }
+    if (p.data?.grade_id) sel.value = String(p.data.grade_id);
+    if (!(g.data || []).length) notice('e', 'لا توجد صفوف دراسية في قاعدة البيانات بعد. تواصل مع إدارة المنصة.');
+    show('formView'); $('#title').focus();
+  } catch (e) { $('#errText').textContent = friendly(e); show('errView'); }
+}
+
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault(); $('#fmsg').textContent = ''; notice('', '');
+  const name = $('#name').value.trim().replace(/\s+/g, ' '), grade = +$('#grade').value;
+  if (name.length < 3) { $('#name').focus(); return $('#fmsg').textContent = 'اكتب اسمك الكامل (٣ أحرف على الأقل).'; }
+  if (!grade) { $('#grade').focus(); return $('#fmsg').textContent = 'اختر صفّك الدراسي.'; }
+  const b = $('#save'), bt = $('#saveText'); b.disabled = true; b.setAttribute('aria-busy', 'true'); bt.textContent = 'جارٍ الحفظ…';
+  try {
+    const r = await withTimeout(sb.rpc('save_my_profile', { p_name: name, p_grade_id: grade }));
+    if (r.error) {
+      const m = String(r.error.message || '');
+      throw (/Could not find the function|PGRST202|schema cache/i.test(m) ? new Error('save_my_profile') : r.error);
+    }
+    location.replace(NEXT);
+  } catch (x) { notice('e', friendly(x)); b.disabled = false; b.removeAttribute('aria-busy'); bt.textContent = 'حفظ والمتابعة'; }
+});
+
+$('#out').onclick = async () => { try { await sb.auth.signOut(); } catch (e) { console.warn(e); } toLogin(); };
+$('#retry').onclick = () => location.reload();   // a failed dynamic import() is cached by the browser, so only a reload can recover
+boot();
+</script>
+</body>
+</html>
