@@ -76,5 +76,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/pay/:s(success|pending|fail)",
+      "destination": "/payment.html"
+    }
   ]
 }
