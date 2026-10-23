@@ -298,3 +298,11 @@ dialog input[type=file]{padding:.5rem .6rem}.x{position:absolute;inset-block-sta
 .up{animation:rise .5s ease backwards}@keyframes rise{from{opacity:0;transform:translateY(8px)}}
 .prof .top .in{min-block-size:64px}
 .auth .box{min-block-size:560px}.auth .wrap{min-block-size:560px}
+
+/* ---- profile tabs + tables ---- */
+.prof .tp{display:grid;gap:var(--sp-6)}.prof .tp[hidden]{display:none}
+.prof .tabs.seg{inline-size:100%;overflow-x:auto;flex-wrap:nowrap}.prof .tabs.seg .btn{white-space:nowrap;flex:1}
+.tbl{inline-size:100%;border-collapse:collapse;font-size:var(--fs-14)}
+.tbl th{text-align:start;color:var(--mut);font-weight:600;padding:.6rem .7rem;border-block-end:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:.65rem .7rem;border-block-end:1px solid var(--line);vertical-align:middle}
+.tbl tbody tr:hover{background:var(--cream)}

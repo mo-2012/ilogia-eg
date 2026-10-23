@@ -42,7 +42,7 @@
 <header class="top"><div class="w in">
   <a href="#" class="brand" aria-label="ilogia"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b><small>منصة تعليمية عربية</small></span></a>
   <nav class="pillnav" id="nav" aria-label="التنقل الرئيسي"><a href="#path">منهجنا</a><a href="#videos">الدروس</a><a href="#library">المكتبة</a><a href="#plans">الباقات</a><a href="#certs">الشهادات</a><a href="#faq">الأسئلة الشائعة</a></nav>
-  <button class="btn g s" id="themeBtn" aria-label="تبديل المظهر"><svg class="ui" width="20" height="20" aria-hidden="true"><use href="#u-moon"/></svg></button><button class="btn g s" id="myBtn" aria-label="حسابي"><svg class="ic a-flame" width="20" height="20" aria-hidden="true"><use href="#i-flame"/></svg><span class="tx">&nbsp;حسابي</span></button><div id="authArea"></div><button class="btn g s menu" id="menu" aria-expanded="false" aria-controls="nav" aria-label="القائمة"><svg class="ui" width="22" height="22" aria-hidden="true"><use href="#u-menu"/></svg></button>
+  <button class="btn g s" id="themeBtn" aria-label="تبديل المظهر"><svg class="ui" width="20" height="20" aria-hidden="true"><use href="#u-moon"/></svg></button><a class="btn g s" id="myBtn" href="profile.html" aria-label="ملفي"><svg class="ic a-flame" width="20" height="20" aria-hidden="true"><use href="#i-flame"/></svg><span class="tx">&nbsp;ملفي</span></a><div id="authArea"></div><button class="btn g s menu" id="menu" aria-expanded="false" aria-controls="nav" aria-label="القائمة"><svg class="ui" width="22" height="22" aria-hidden="true"><use href="#u-menu"/></svg></button>
 </div></header>
 <main>
 <section class="hero"><div class="fx" aria-hidden="true"><svg class="ic f1 a-twinkle" width="46" height="46"><use href="#i-star"/></svg><svg class="ic f2 a-flame" width="54" height="54"><use href="#i-flame"/></svg><svg class="ic f3 a-glow" width="50" height="50"><use href="#i-bulb"/></svg><svg class="ic f4 a-flip" width="58" height="58"><use href="#i-book"/></svg><svg class="ic f5 a-fly" width="52" height="52"><use href="#i-rocket"/></svg></div>
@@ -70,15 +70,12 @@
 
 
 <dialog id="payDlg"><form id="payForm" novalidate><button type="button" class="btn g s x" data-close>إغلاق</button><h2 id="payTitle"></h2>
-  <button type="button" class="btn" id="payOnline">ادفع أونلاين (كارت / فوري / محفظة)</button>
-  <p class="note" style="text-align:center;margin:8px 0">أو ادفع يدويًا بفودافون كاش وارفع الإيصال:</p>
   <label>وسيلة الدفع<select id="payMethod"></select></label>
   <div class="note" id="payBox"><b id="payLabel"></b><div class="pcopy"><span id="payHandle" dir="ltr"></span><button type="button" class="btn g s" id="payCopy">نسخ</button></div><div id="payAmt" class="pamt"></div><small id="payHint"></small></div>
   <label>الرقم اللي حوّلت منه<input id="paySender" inputmode="tel" autocomplete="tel" placeholder="01xxxxxxxxx" dir="ltr"></label>
   <label>رقم العملية / المرجع<input id="payRef" autocomplete="off" placeholder="مثال: 123456789" dir="ltr"></label>
   <label>صورة الإيصال (صورة أو PDF، حتى 5MB)<input id="payFile" type="file" accept="image/jpeg,image/png,image/webp,application/pdf"></label>
   <p class="err" id="payErr" role="alert"></p><button class="btn" id="paySubmit">إرسال الطلب</button></form></dialog>
-<dialog id="myDlg"><div class="in"><button type="button" class="btn g s x" data-close>إغلاق</button><h3>حسابي ومتابعة الإنجاز</h3><div class="stats"><div><b id="stT">٠</b>وقت المذاكرة</div><div><b id="stD">٠</b>دروس منجزة</div><div><b id="stS">٠</b>أيام متتالية <svg class="ic a-flame" width="20" height="20" aria-hidden="true"><use href="#i-flame"/></svg></div></div><div id="tm">00:00:00</div><button class="btn" id="tmBtn">بدء جلسة مذاكرة</button> <button class="btn g s" id="tmReset">إنهاء الجلسة</button> <a class="btn g s" href="profile.html#certs">شهاداتي</a></div></dialog>
 <dialog id="vidDlg"><div class="in"><button type="button" class="btn g s x" data-close>إغلاق</button><h3 id="vidTitle"></h3><div id="vidBox"></div><button class="btn s" id="doneBtn">أكملت الدرس</button></div></dialog>
 <div id="toast" role="status"></div>
 
@@ -101,7 +98,7 @@ $('#menu').onclick=e=>e.currentTarget.setAttribute('aria-expanded',$('#nav').cla
 /* ---------- auth UI ---------- */
 function authArea(){const a=$('#authArea');
   if(!st.me){a.innerHTML='<button class="btn s" id="openAuth">دخول<b class="hm"> / حساب جديد</b></button>';$('#openAuth').onclick=()=>openAuth('login');return}
-  a.innerHTML=`<span style="font-size:.9rem">${esc(st.me.full_name||st.me.email)}</span><a class="btn g s" href="profile.html">ملفي</a>${!st.me.is_teacher&&!st.me.isAdmin?'<a class="btn g s" href="teacher.html">انضم كمعلم</a>':''}${st.me.is_teacher?'<a class="btn g s" href="teacher.html">لوحة المعلم</a>':''}${st.me.isAdmin?'<a class="btn g s" href="admin.html">الإدارة</a>':''}<button class="btn g s" id="out">خروج</button>`;
+  a.innerHTML=`<span style="font-size:.9rem">${esc(st.me.full_name||st.me.email)}</span>${!st.me.is_teacher&&!st.me.isAdmin?'<a class="btn g s" href="teacher.html">انضم كمعلم</a>':''}${st.me.is_teacher?'<a class="btn g s" href="teacher.html">لوحة المعلم</a>':''}${st.me.isAdmin?'<a class="btn g s" href="crm.html">CRM</a><a class="btn g s" href="admin.html">الإدارة</a>':''}<button class="btn g s" id="out">خروج</button>`;
   $('#out').onclick=async()=>{try{await sb.auth.signOut()}catch(x){console.error(x)}location.replace('login.html')}}
 const openAuth=m=>{location.href='login.html'+(m==='register'?'?mode=register':'')};
 
@@ -187,7 +184,7 @@ const TM=['system','light','dark'],TI={system:'u-monitor',light:'u-sun',dark:'u-
 const applyTheme=m=>{const d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';$('#themeBtn').innerHTML='<svg class="ui" width="20" height="20" aria-hidden="true"><use href="#'+TI[m]+'"/></svg>';$('#themeBtn').title='المظهر: '+{system:'حسب النظام',light:'فاتح',dark:'داكن'}[m]};
 applyTheme(LS('el_theme')||'system');$('#themeBtn').onclick=()=>{const n=TM[(TM.indexOf(LS('el_theme')||'system')+1)%3];LS('el_theme',n);applyTheme(n)};
 const fmt=s=>[s/3600|0,(s%3600)/60|0,s%60].map(n=>String(n).padStart(2,'0')).join(':');
-function stats(){const p=P();$('#stT').textContent=AR(p.secs>=3600?Math.floor(p.secs/3600)+'س '+Math.floor(p.secs%3600/60)+'د':Math.floor(p.secs/60)+' د');$('#stD').textContent=AR(p.done.length);
+function stats(){const p=P();if(!$('#stT'))return;$('#stT').textContent=AR(p.secs>=3600?Math.floor(p.secs/3600)+'س '+Math.floor(p.secs%3600/60)+'د':Math.floor(p.secs/60)+' د');$('#stD').textContent=AR(p.done.length);
   let n=0,d=new Date();while(p.days.includes(dkey(d))){n++;d.setDate(d.getDate()-1)}$('#stS').textContent=AR(n)}
 function setDone(){$('#doneBtn').textContent=P().done.includes(curVid)?'تم الإنجاز (إلغاء)':'أكملت الدرس'}
 $('#doneBtn').onclick=async()=>{if(!curVid)return;const p=P(),i=p.done.indexOf(curVid),mk=i<0,id=curVid;mk?p.done.push(id):p.done.splice(i,1);LS(PK(),p);setDone();stats();
@@ -195,14 +192,11 @@ $('#doneBtn').onclick=async()=>{if(!curVid)return;const p=P(),i=p.done.indexOf(c
   try{need();const r=await T(sb.rpc('set_lesson_done',{p_video_id:id,p_done:mk}));if(r.error)throw r.error;toast(mk?'أحسنت! تم تسجيل إكمال الدرس':'تم إلغاء الإكمال')}
   catch(x){if(/subscription_required|not_found/.test(String(x?.message))){const q=P(),j=q.done.indexOf(id);mk?(j>=0&&q.done.splice(j,1)):(j<0&&q.done.push(id));LS(PK(),q);setDone();stats();toast(msg(x))}
     else{const q=Q();q.push({k:'d',v:id,d:mk});setQ(q);toast('تم الحفظ على الجهاز وسيتزامن عند عودة الاتصال')}}};
-let run=null,ses=0;const tick=()=>{ses++;const p=P();p.secs++;(p.by=p.by||{})[today()]=(p.by[today()]||0)+1;if(!p.days.includes(today()))p.days.push(today());LS(PK(),p);$('#tm').textContent=fmt(ses);stats();
+let run=null,ses=0;const tick=()=>{ses++;const p=P();p.secs++;(p.by=p.by||{})[today()]=(p.by[today()]||0)+1;if(!p.days.includes(today()))p.days.push(today());LS(PK(),p);stats();
   const v=curVid||lastVid;if(v){if(accV!==v){enqueue();accV=v}acc++;if(acc>=30){enqueue();flushQ()}}};
 /* time while a lesson is open counts as study time (unless the manual timer is already running) */
 function startVT(){if(!vt&&!run)vt=setInterval(tick,1000)}function stopVT(){clearInterval(vt);vt=null}
 addEventListener('pagehide',()=>{enqueue()});addEventListener('online',()=>flushQ());
-$('#tmBtn').onclick=()=>{if(run){clearInterval(run);run=null;$('#tmBtn').textContent='متابعة الجلسة'}else{stopVT();run=setInterval(tick,1000);$('#tmBtn').textContent='إيقاف مؤقت'}};
-$('#tmReset').onclick=()=>{clearInterval(run);run=null;ses=0;$('#tm').textContent='00:00:00';$('#tmBtn').textContent='بدء جلسة مذاكرة';toast('تم حفظ وقت الجلسة')};
-$('#myBtn').onclick=()=>{stats();$('#myDlg').showModal()};
 /* ilogia: confetti on lesson complete */
 function burst(el){const r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,cols=['#82C341','#D4AF37','#E5A93C','#8FA3E8','#fff'],host=el.closest('dialog')||document.body;
   for(let i=0;i<30;i++){const s=document.createElement('i'),a=Math.random()*6.283,d=70+Math.random()*120;s.className='cf';s.style.cssText=`left:${cx}px;top:${cy}px;background:${cols[i%5]};--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d-70}px;--r:${Math.random()*720-360}deg`;host.appendChild(s);setTimeout(()=>s.remove(),1100)}}
@@ -231,11 +225,6 @@ authArea();for(const s of['#vlist','#llist'])$(s).innerHTML='<div class="sk"></d
       if(r.data&&r.data.file_path){url=sb.storage.from('app').getPublicUrl(r.data.file_path,{download:'ilogia.apk'}).data.publicUrl;b.href=url;if(r.data.version)b.title='الإصدار '+r.data.version}}catch(x){console.warn('[ilogia] apk',x)}
     b.addEventListener('click',e=>{if(!url){e.preventDefault();toast('تطبيق الأندرويد غير متاح حاليًا، قريبًا إن شاء الله')}})})();
   await loadCatalog()})();
-
-/* Fawaterk online payment: server creates the invoice (price from DB), we only redirect */
-$('#payOnline').addEventListener('click',async()=>{const b=$('#payOnline'),e=$('#payErr'),o=b.textContent;e.textContent='';b.disabled=true;b.textContent='جاري تحويلك لبوابة الدفع…';
-try{const {data,error}=await sb.functions.invoke('fawaterk-create-invoice',{body:{plan_id:st.plan.id}});if(error)throw error;if(data?.error)throw new Error(data.error);if(!data?.url)throw new Error('no_url');location.href=data.url}
-catch(x){let m='تعذر بدء الدفع الأونلاين، جرّب تاني أو ادفع بفودافون كاش.';try{const j=await x.context?.json?.();if(j?.error==='pending_exists')m='عندك طلب اشتراك قيد المراجعة بالفعل.';if(j?.error==='email_not_confirmed')m='أكّد بريدك الإلكتروني الأول.'}catch(_){}e.textContent=m;b.disabled=false;b.textContent=o}});
 </script>
 </body>
 </html>

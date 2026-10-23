@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="theme-color" content="#136F58"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CRM — ilogia</title><meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap">
+<link rel="stylesheet" href="ilogia-ds.css">
+<style>
+.crm{max-inline-size:1280px;margin-inline:auto;padding:var(--sp-6) clamp(14px,3vw,28px) var(--sp-16)}
+.crm .stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.crm .stats>div.warn b{color:var(--gold-d)}.crm .stats>div.bad b{color:var(--err)}
+.bar-f{display:flex;gap:var(--sp-3);flex-wrap:wrap;align-items:end;margin-block-end:var(--sp-4)}
+.bar-f label{display:grid;gap:4px;font-size:var(--fs-12);color:var(--mut);font-weight:600}
+.bar-f input,.bar-f select{min-inline-size:150px}
+.bar-f .grow{flex:1;min-inline-size:220px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-xl);background:var(--surface)}
+.tw .tbl tbody tr{cursor:pointer}
+.st{display:inline-block;font-size:var(--fs-12);font-weight:600;border-radius:99px;padding:.1rem .7rem;background:var(--tint);color:var(--primary-d);white-space:nowrap}
+.st.new{background:var(--cream);color:var(--mut)}.st.interested{background:#e8eefc;color:#2d4a9a}.st.renew{background:var(--gold-t);color:var(--gold-d)}.st.expired{background:#fdeaea;color:var(--err)}.st.lost{background:#eee;color:#666}
+.kb{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(240px,1fr);gap:var(--sp-4);overflow-x:auto;padding-block-end:var(--sp-3)}
+.kb section{background:var(--cream);border-radius:var(--r-xl);padding:var(--sp-3);min-block-size:200px}
+.kb h3{font-size:var(--fs-14);margin:0 0 var(--sp-3);display:flex;justify-content:space-between}
+.kc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:var(--sp-3);margin-block-end:var(--sp-2);cursor:pointer;font-size:var(--fs-14)}
+.kc:hover{box-shadow:var(--shadow-up)}.kc small{display:block;color:var(--mut)}
+.fu{color:var(--err);font-weight:600}
+dialog#dr{inline-size:min(720px,96vw);max-block-size:92vh;padding:0;border:0;border-radius:var(--r-xl);background:var(--surface);color:var(--ink)}
+dialog#dr::backdrop{background:rgba(10,20,30,.5)}
+dialog#dr .in{padding:var(--sp-6);display:grid;gap:var(--sp-4)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}@media(max-width:560px){.two{grid-template-columns:1fr}}
+.nt{border-inline-start:3px solid var(--line);padding:.3rem .8rem;margin-block-end:var(--sp-2);font-size:var(--fs-14)}.nt small{color:var(--mut);display:block}
+.nt.call{border-color:#2d4a9a}.nt.whatsapp{border-color:#25d366}.nt.payment{border-color:var(--gold)}
+.err{color:var(--err)}
+</style>
+</head>
+<body>
+<header class="top"><div class="w in">
+  <a class="brand" href="index.html" aria-label="ilogia"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b><small>CRM الطلاب</small></span></a>
+  <div id="who" hidden style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><a class="btn g s" href="admin.html">لوحة الإدارة</a><button class="btn g s" id="reload" type="button">تحديث</button><button class="btn g s" id="out" type="button">خروج</button></div>
+</div></header>
+
+<main class="crm">
+<section id="login" class="card" hidden style="max-inline-size:440px;margin-inline:auto">
+  <h2 style="margin-top:0">دخول الأدمن</h2>
+  <form id="lf" novalidate><label>البريد الإلكتروني<input id="em" type="email" autocomplete="username" dir="ltr"></label>
+  <label>كلمة المرور<input id="pw" type="password" autocomplete="current-password" dir="ltr"></label>
+  <p class="err" id="le" role="alert"></p><button class="btn" style="inline-size:100%">دخول</button></form>
+</section>
+<div id="loading" class="empty">جارٍ التحميل…</div>
+<div id="setup" class="card" hidden><h2 style="margin-top:0">لازم تشغّل ملف الـ SQL الأول</h2><p>جداول الـ CRM لسه متعملتش. افتح Supabase ← SQL Editor وشغّل <code dir="ltr">supabase/012_crm.sql</code> ثم حدّث الصفحة.</p></div>
+
+<div id="app" hidden>
+  <div class="stats" id="kpi"></div>
+  <div class="tabs seg" role="tablist"><button class="btn" data-t="students" aria-pressed="true">الطلاب</button><button class="btn" data-t="pipe" aria-pressed="false">خط المتابعة</button><button class="btn" data-t="renew" aria-pressed="false">التجديدات والمتابعات</button></div>
+
+  <div data-p="students">
+    <div class="bar-f">
+      <label class="grow">بحث<input id="q" placeholder="اسم / إيميل / موبايل"></label>
+      <label>المرحلة<select id="fStage"></select></label>
+      <label>الصف<select id="fGrade"></select></label>
+      <label>الاشتراك<select id="fSub"><option value="">الكل</option><option value="active">مفعّل</option><option value="pending">قيد المراجعة</option><option value="expired">منتهي</option><option value="rejected">مرفوض</option><option value="none">بدون اشتراك</option></select></label>
+      <label>الترتيب<select id="fSort"><option value="new">الأحدث تسجيلًا</option><option value="exp">أقرب انتهاء</option><option value="name">الاسم</option><option value="fu">المتابعة</option></select></label>
+      <button class="btn g" id="csv" type="button">تصدير CSV</button>
+    </div>
+    <p id="cnt" style="color:var(--mut);margin:0 0 var(--sp-2)"></p>
+    <div class="tw"><table class="tbl"><thead><tr><th>الطالب</th><th>الصف</th><th>الباقة</th><th>الاشتراك</th><th>ينتهي</th><th>المرحلة</th><th>متابعة</th><th>تسجيل</th></tr></thead><tbody id="rows"></tbody></table></div>
+  </div>
+
+  <div data-p="pipe" hidden><div class="kb" id="kb"></div></div>
+
+  <div data-p="renew" hidden>
+    <div class="card"><h2 style="margin-top:0">متابعات مستحقة اليوم أو متأخرة</h2><div id="fuList"></div></div>
+    <div class="card"><h2 style="margin-top:0">اشتراكات تنتهي خلال ١٤ يومًا</h2><div id="exList"></div></div>
+    <div class="card"><h2 style="margin-top:0">انتهت مؤخرًا (آخر ٣٠ يومًا)</h2><div id="lsList"></div></div>
+  </div>
+</div>
+</main>
+
+<dialog id="dr"><div class="in" id="drIn"></div></dialog>
+<p id="toast" role="status" style="position:fixed;inset-block-end:16px;inset-inline-start:16px;background:var(--ink);color:#fff;padding:.5rem 1rem;border-radius:99px;display:none"></p>
+
+<script type="module">
+import {supabase as sb} from './supabase.js';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const STAGES=[['new','جديد'],['interested','مهتم'],['subscribed','مشترك'],['renew','تجديد قريب'],['expired','منتهي'],['lost','فقدناه']],SL=Object.fromEntries(STAGES);
+const SUBL={active:'مفعّل',pending:'قيد المراجعة',expired:'منتهي',rejected:'مرفوض',none:'—'};
+const KL={note:'ملاحظة',call:'مكالمة',whatsapp:'واتساب',payment:'دفع'};
+const dt=d=>d?new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'short',year:'numeric'}):'—';
+const toast=t=>{const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2500)};
+const dayDiff=d=>d?Math.ceil((new Date(d)-Date.now())/864e5):null;
+const todayS=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+let S=[],G=[],META={},NOTES={},view=[];
+
+async function boot(){
+  $('#loading').hidden=false;
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){show('login');return}
+  const a=await sb.rpc('is_admin');
+  if(!a.data){await sb.auth.signOut();show('login');$('#le').textContent='هذا الحساب ليس أدمن';return}
+  show('app');await load()}
+function show(w){$('#loading').hidden=true;$('#login').hidden=w!=='login';$('#app').hidden=w!=='app';$('#who').hidden=w!=='app';if(w==='app')$('#who').style.display='flex'}
+$('#lf').onsubmit=async e=>{e.preventDefault();$('#le').textContent='';const r=await sb.auth.signInWithPassword({email:$('#em').value.trim(),password:$('#pw').value});if(r.error){$('#le').textContent='البريد أو كلمة المرور غير صحيحة';return}boot()};
+$('#out').onclick=async()=>{await sb.auth.signOut();location.reload()};
+$('#reload').onclick=()=>load().then(()=>toast('تم التحديث'));
+
+async function load(){
+  const [p,s,g,m,n]=await Promise.all([
+    sb.from('profiles').select('*').order('created_at',{ascending:false}),
+    sb.from('subscriptions').select('id,user_id,status,amount,payment_method,sender_number,created_at,expires_at,plan:plans(name)').order('id',{ascending:false}),
+    sb.from('grades').select('id,name').order('sort_order'),
+    sb.from('crm_student').select('*'),
+    sb.from('crm_notes').select('*').order('created_at',{ascending:false})]);
+  if(m.error&&/crm_student|relation|42P01|PGRST205/.test(JSON.stringify(m.error))){$('#app').hidden=true;$('#setup').hidden=false;return}
+  $('#setup').hidden=true;$('#app').hidden=false;
+  if(p.error){toast('تعذّر تحميل الطلاب');return}
+  G=g.data||[];META=Object.fromEntries((m.data||[]).map(x=>[x.user_id,x]));
+  NOTES={};(n.data||[]).forEach(x=>(NOTES[x.user_id]??=[]).push(x));
+  const subs={};(s.data||[]).forEach(x=>(subs[x.user_id]??=[]).push(x));
+  S=(p.data||[]).map(u=>{
+    const list=subs[u.id]||[],cur=list.find(x=>x.status==='active')||list[0]||null,meta=META[u.id]||{stage:'auto',tags:[]};
+    const left=cur?.status==='active'?dayDiff(cur.expires_at):null;
+    let auto=!cur?'new':cur.status==='active'?(left!=null&&left<=7?'renew':'subscribed'):cur.status==='pending'?'interested':cur.status==='expired'?'expired':'interested';
+    const stage=meta.stage&&meta.stage!=='auto'?meta.stage:auto;
+    return{...u,subs:list,cur,left,meta,stage,phone:u.phone||list.find(x=>x.sender_number)?.sender_number||'',status:cur?.status||'none',gname:G.find(x=>x.id==u.grade_id)?.name||'',notes:NOTES[u.id]||[]}});
+  kpis();filters();render();pipe();renewals()}
+
+function kpis(){
+  const act=S.filter(x=>x.status==='active'),wk=S.filter(x=>Date.now()-new Date(x.created_at)<7*864e5),ex=act.filter(x=>x.left!=null&&x.left<=7),fu=S.filter(x=>x.meta.follow_up_at&&x.meta.follow_up_at<=todayS());
+  const rev=S.flatMap(x=>x.subs).filter(x=>['active','expired'].includes(x.status)&&Date.now()-new Date(x.created_at)<30*864e5).reduce((a,x)=>a+(+x.amount||0),0);
+  const pend=S.filter(x=>x.status==='pending').length;
+  $('#kpi').innerHTML=[['إجمالي الطلاب',S.length,''],['مشتركون نشطون',act.length,''],['جدد هذا الأسبوع',wk.length,''],['ينتهون خلال ٧ أيام',ex.length,ex.length?'warn':''],['متابعات مستحقة',fu.length,fu.length?'bad':''],['إيصالات بانتظارك',pend,pend?'warn':''],['إيراد آخر ٣٠ يومًا',AR(rev)+' ج',''] ]
+    .map(k=>`<div class="${k[2]}"><b>${typeof k[1]==='number'?AR(k[1]):k[1]}</b>${k[0]}</div>`).join('')}
+function filters(){
+  $('#fStage').innerHTML='<option value="">الكل</option>'+STAGES.map(s=>`<option value="${s[0]}">${s[1]}</option>`).join('');
+  $('#fGrade').innerHTML='<option value="">الكل</option>'+G.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('')}
+['q','fStage','fGrade','fSub','fSort'].forEach(i=>$('#'+i).addEventListener('input',render));
+function render(){
+  const q=$('#q').value.trim().toLowerCase(),st=$('#fStage').value,gr=$('#fGrade').value,sb_=$('#fSub').value,so=$('#fSort').value;
+  view=S.filter(x=>(!q||[x.full_name,x.email,x.phone].some(v=>String(v||'').toLowerCase().includes(q)))&&(!st||x.stage===st)&&(!gr||x.grade_id==gr)&&(!sb_||x.status===sb_));
+  const cmp={new:(a,b)=>new Date(b.created_at)-new Date(a.created_at),name:(a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||''),'ar'),
+    exp:(a,b)=>(a.left??1e9)-(b.left??1e9),fu:(a,b)=>String(a.meta.follow_up_at||'9').localeCompare(String(b.meta.follow_up_at||'9'))};
+  view.sort(cmp[so]);$('#cnt').textContent=AR(view.length)+' طالب';
+  $('#rows').innerHTML=view.map(x=>{const od=x.meta.follow_up_at&&x.meta.follow_up_at<=todayS();return`<tr data-id="${esc(x.id)}"><td><b>${esc(x.full_name||'—')}</b><br><small style="color:var(--mut)" dir="ltr">${esc(x.email||'')}</small></td><td>${esc(x.gname||'—')}</td><td>${esc(x.cur?.plan?.name||'—')}</td><td>${SUBL[x.status]}</td><td>${x.status==='active'?`${dt(x.cur.expires_at)}${x.left!=null?`<br><small style="color:var(--mut)">${AR(x.left)} يوم</small>`:''}`:'—'}</td><td><span class="st ${x.stage}">${SL[x.stage]}</span></td><td class="${od?'fu':''}">${x.meta.follow_up_at?dt(x.meta.follow_up_at):'—'}</td><td>${dt(x.created_at)}</td></tr>`}).join('')||'<tr><td colspan="8"><div class="empty">لا نتائج</div></td></tr>'}
+$('#rows').onclick=e=>{const r=e.target.closest('tr[data-id]');if(r)open(r.dataset.id)};
+$('#csv').onclick=()=>{const H=['الاسم','الإيميل','الموبايل','الصف','الباقة','حالة الاشتراك','ينتهي','المرحلة','المتابعة','تاريخ التسجيل'];
+  const c=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv='﻿'+[H,...view.map(x=>[x.full_name,x.email,x.phone,x.gname,x.cur?.plan?.name,SUBL[x.status],x.cur?.expires_at?.slice(0,10),SL[x.stage],x.meta.follow_up_at,x.created_at?.slice(0,10)])].map(r=>r.map(c).join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='ilogia-students-'+todayS()+'.csv';a.click()};
+
+$$('.tabs [data-t]').forEach(b=>b.onclick=()=>{$$('.tabs [data-t]').forEach(x=>x.setAttribute('aria-pressed',x===b));$$('[data-p]').forEach(p=>p.hidden=p.dataset.p!==b.dataset.t)});
+
+function pipe(){$('#kb').innerHTML=STAGES.map(([k,l])=>{const L=S.filter(x=>x.stage===k).slice(0,60);return`<section><h3>${l}<span>${AR(S.filter(x=>x.stage===k).length)}</span></h3>${L.map(x=>`<div class="kc" data-id="${esc(x.id)}"><b>${esc(x.full_name||x.email||'—')}</b><small>${esc(x.cur?.plan?.name||x.gname||'')}</small>${x.meta.follow_up_at?`<small class="${x.meta.follow_up_at<=todayS()?'fu':''}">متابعة: ${dt(x.meta.follow_up_at)}</small>`:''}</div>`).join('')||'<small style="color:var(--mut)">فارغ</small>'}</section>`}).join('')}
+$('#kb').onclick=e=>{const r=e.target.closest('.kc');if(r)open(r.dataset.id)};
+const wa=p=>{let d=String(p||'').replace(/\D/g,'');if(d.startsWith('0'))d='2'+d;return d.length>=10?'https://wa.me/'+d:''};
+function item(x,extra){const w=wa(x.phone);return`<div class="kc" data-id="${esc(x.id)}" style="display:flex;justify-content:space-between;gap:.6rem;align-items:center;flex-wrap:wrap"><span><b>${esc(x.full_name||x.email)}</b><small>${esc(x.cur?.plan?.name||'')} ${extra}</small></span>${w?`<a class="btn s g" href="${w}" target="_blank" rel="noopener" data-x>واتساب</a>`:''}</div>`}
+function renewals(){
+  const fu=S.filter(x=>x.meta.follow_up_at&&x.meta.follow_up_at<=todayS()).sort((a,b)=>a.meta.follow_up_at.localeCompare(b.meta.follow_up_at));
+  const ex=S.filter(x=>x.status==='active'&&x.left!=null&&x.left<=14).sort((a,b)=>a.left-b.left);
+  const ls=S.filter(x=>x.status==='expired'&&x.cur?.expires_at&&-dayDiff(x.cur.expires_at)<=30);
+  const L=(a,f)=>a.length?a.map(f).join(''):'<div class="empty">لا يوجد</div>';
+  $('#fuList').innerHTML=L(fu,x=>item(x,'· متابعة '+dt(x.meta.follow_up_at)));
+  $('#exList').innerHTML=L(ex,x=>item(x,'· باقي '+AR(x.left)+' يوم'));
+  $('#lsList').innerHTML=L(ls,x=>item(x,'· انتهى '+dt(x.cur.expires_at)));
+  $$('#fuList,#exList,#lsList').forEach(b=>b.onclick=e=>{if(e.target.closest('[data-x]'))return;const r=e.target.closest('.kc');if(r)open(r.dataset.id)})}
+
+function open(id){const x=S.find(v=>v.id===id);if(!x)return;const w=wa(x.phone);
+  $('#drIn').innerHTML=`<div style="display:flex;justify-content:space-between;gap:1rem;align-items:start"><div><h2 style="margin:0">${esc(x.full_name||'—')}</h2><p style="margin:.2rem 0;color:var(--mut)" dir="ltr">${esc(x.email||'')}${x.phone?' · '+esc(x.phone):''}</p><span class="st ${x.stage}">${SL[x.stage]}</span> ${x.gname?`<span class="pill n">${esc(x.gname)}</span>`:''}</div><button class="btn g s" id="dx" type="button">إغلاق</button></div>
+<div class="two"><label>المرحلة<select id="dStage"><option value="auto">تلقائي (حسب الاشتراك)</option>${STAGES.map(s=>`<option value="${s[0]}" ${x.meta.stage===s[0]?'selected':''}>${s[1]}</option>`).join('')}</select></label>
+<label>موعد المتابعة<input id="dFu" type="date" value="${esc(x.meta.follow_up_at||'')}"></label></div>
+<label>وسوم <small style="color:var(--mut)">(مفصولة بفاصلة)</small><input id="dTags" value="${esc((x.meta.tags||[]).join('، '))}"></label>
+<div style="display:flex;gap:.5rem;flex-wrap:wrap"><button class="btn" id="dSave" type="button">حفظ</button>${w?`<a class="btn g" href="${w}" target="_blank" rel="noopener">واتساب</a>`:''}${x.email?`<a class="btn g" href="mailto:${esc(x.email)}">إيميل</a>`:''}</div>
+<p class="msg" id="dMsg" role="status"></p>
+<div><h3 style="margin:0 0 .5rem">الاشتراكات (${AR(x.subs.length)})</h3>${x.subs.length?`<table class="tbl"><tbody>${x.subs.map(s=>`<tr><td>${dt(s.created_at)}</td><td>${esc(s.plan?.name||'—')}</td><td>${s.amount!=null?AR(s.amount)+' ج':'—'}</td><td>${SUBL[s.status]||esc(s.status)}</td><td>${s.status==='active'?'حتى '+dt(s.expires_at):''}</td></tr>`).join('')}</tbody></table>`:'<p style="color:var(--mut)">لا اشتراكات</p>'}</div>
+<div><h3 style="margin:0 0 .5rem">سجل المتابعة</h3><div class="two" style="grid-template-columns:140px 1fr auto"><select id="nKind">${Object.entries(KL).map(k=>`<option value="${k[0]}">${k[1]}</option>`).join('')}</select><input id="nBody" maxlength="2000" placeholder="اكتب ملاحظة…"><button class="btn" id="nAdd" type="button">إضافة</button></div>
+<div id="nList" style="margin-block-start:.8rem">${notesHtml(x)}</div></div>`;
+  $('#dx').onclick=()=>$('#dr').close();
+  $('#dSave').onclick=async()=>{const tags=$('#dTags').value.split(/[,،]/).map(t=>t.trim()).filter(Boolean).slice(0,10),row={user_id:x.id,stage:$('#dStage').value,follow_up_at:$('#dFu').value||null,tags,updated_at:new Date().toISOString()};
+    const r=await sb.from('crm_student').upsert(row);if(r.error){$('#dMsg').className='msg e';$('#dMsg').textContent='تعذّر الحفظ';return}
+    META[x.id]=row;await load();$('#dr').close();toast('تم الحفظ')};
+  $('#nAdd').onclick=async()=>{const body=$('#nBody').value.trim();if(!body)return;const r=await sb.from('crm_notes').insert({user_id:x.id,kind:$('#nKind').value,body}).select().single();
+    if(r.error){$('#dMsg').className='msg e';$('#dMsg').textContent='تعذّرت الإضافة';return}
+    x.notes.unshift(r.data);(NOTES[x.id]??=[]).unshift(r.data);$('#nBody').value='';$('#nList').innerHTML=notesHtml(x)};
+  $('#dr').showModal()}
+function notesHtml(x){return x.notes.length?x.notes.map(n=>`<div class="nt ${esc(n.kind)}"><small>${KL[n.kind]||''} · ${dt(n.created_at)}</small>${esc(n.body)}</div>`).join(''):'<p style="color:var(--mut)">لا توجد ملاحظات بعد</p>'}
+boot();
+</script>
+</body>
+</html>

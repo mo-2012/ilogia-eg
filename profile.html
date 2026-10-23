@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><script>(function(){try{var k='sb-zugwicbbfbefbbwugfxq-auth-token';if(!localStorage.getItem(k)){location.replace('login.html?next=profile.html')}}catch(e){}})()</script><script>(function(){var p=location.pathname,n=p.replace(/(^|\/)index\.html$/,'$1').replace(/\.html$/,'');if(n!==p)history.replaceState(null,'',n+location.search+location.hash)})()</script><meta name="robots" content="noindex,nofollow"><meta name="description" content="ملفك الدراسي في منصة ilogia: التقدّم والإنجازات.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ملفي الشخصي — ilogia</title>
+<title>ملفي — ilogia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap"></noscript>
 
@@ -41,56 +41,92 @@
 <main class="w" id="app"><div class="empty">جارٍ التحميل…</div></main>
 
 <script type="module">
-const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const SB_URL='https://zugwicbbfbefbbwugfxq.supabase.co',SB_KEY='sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew';
 const LS=(k,v)=>{try{return v===undefined?JSON.parse(localStorage.getItem(k)):localStorage.setItem(k,JSON.stringify(v))}catch(x){return null}};
 const T=(p,ms=15000)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('TIMEOUT')),ms))]);
 const AVS=['book','bulb','rocket','star','cup','pen','flame','q'],COLS=['#82C341','#D4AF37','#96D3BE','#E5A93C','#85D6BA','#E9C349'];
-const prog=()=>({secs:0,done:[],days:[],by:{},...(LS('el_prog')||{})}),pf=()=>{const o={av:'book',col:COLS[0],goal:30,...(LS('el_profile')||{})};if(!AVS.includes(o.av))o.av='book';return o};
+const dkey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const mins=s=>Math.floor(s/60),fmt=s=>[s/3600|0,(s%3600)/60|0,s%60].map(n=>String(n).padStart(2,'0')).join(':');
+const dur=s=>s>=3600?AR(Math.floor(s/3600))+'س '+AR(mins(s%3600))+'د':AR(mins(s))+' د';
+const dateAr=d=>d?new Date(d).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'}):'—';
+const pf=()=>{const o={av:'book',col:COLS[0],goal:30,...(LS('el_profile')||{})};if(!AVS.includes(o.av))o.av='book';return o};
 const TM=['system','light','dark'],TI={system:'u-monitor',light:'u-sun',dark:'u-moon'};
 const theme=m=>{const d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';$('#themeBtn').innerHTML='<svg class="ui" width="20" height="20" aria-hidden="true"><use href="#'+TI[m]+'"/></svg>'};
 theme(LS('el_theme')||'system');$('#themeBtn').onclick=()=>{const n=TM[(TM.indexOf(LS('el_theme')||'system')+1)%3];LS('el_theme',n);theme(n)};
-const dkey=d=>d.toISOString().slice(0,10),mins=s=>Math.floor(s/60);
-const streak=p=>{let n=0,d=new Date();while(p.days.includes(dkey(d))){n++;d.setDate(d.getDate()-1)}return n};
 const gate=(t,b)=>$('#app').innerHTML=`<div class="card gate"><h1>${t}</h1><p>${b}</p><a class="btn" href="./">العودة للرئيسية</a></div>`;
 async function loadSb(){for(const u of['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm','https://esm.sh/@supabase/supabase-js@2.45.4']){try{const m=await T(import(u));return m.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(x){console.warn(x)}}return null}
 const sb=await loadSb();
+const SBL={active:'مفعّل',pending:'قيد المراجعة',rejected:'مرفوض',expired:'منتهي'},PML={fawaterk:'دفع إلكتروني',vodafone_cash:'فودافون كاش',orange_cash:'أورنج كاش',instapay:'إنستاباي'};
 if(!sb)gate('تعذّر الاتصال','تحقق من الإنترنت وأعد تحميل الصفحة.');
 else{
   let ses=null;try{ses=(await T(sb.auth.getSession())).data.session}catch(x){console.warn(x)}
   if(!ses)location.replace('login.html?next=profile.html');
   else if(!(ses.user.email_confirmed_at||ses.user.confirmed_at)){try{await sb.auth.signOut()}catch(x){console.warn(x)}location.replace('login.html')}
   else{
-    const u=ses.user,meta=u.user_metadata||{};let prof={},sub=null,grades=[],vids=[],loadFailed=false,redirected=false;
-    try{const p=prog();const [a,b,c,d]=await T(Promise.all([sb.from('profiles').select('*').eq('id',u.id).maybeSingle(),sb.from('my_subscription').select('*').maybeSingle(),sb.from('grades').select('*').order('sort_order'),p.done.length?sb.from('videos').select('id,title,subject:subjects(name)').in('id',p.done):Promise.resolve({data:[]})]),20000);
+    const u=ses.user,meta=u.user_metadata||{},PK='el_prog_'+u.id;
+    let prof={},sub=null,grades=[],vids=[],subs=[],certs=[],loadFailed=false,redirected=false,tab=(location.hash||'#home').slice(1);
+    const P=()=>({secs:0,done:[],days:[],by:{},...(LS(PK)||{})});
+    try{
+      const [a,b,c,pr]=await T(Promise.all([sb.from('profiles').select('*').eq('id',u.id).maybeSingle(),sb.from('my_subscription').select('*').maybeSingle(),sb.from('grades').select('*').order('sort_order'),sb.rpc('my_progress')]),20000);
       if(!a.error&&(!a.data||a.data.onboarded_at===null)){location.replace('setup.html?next=profile.html');throw new Error('REDIRECT')}
-      prof=a.data||{};sub=b.data||null;grades=c.data||[];vids=d.data||[]}catch(x){if(x.message==='REDIRECT')redirected=true;else{console.warn('[ilogia profile]',x);loadFailed=true}}
+      prof=a.data||{};sub=b.data||null;grades=c.data||[];
+      if(!pr.error&&pr.data)LS(PK,{secs:pr.data.secs||0,done:pr.data.done||[],days:pr.data.days||[],by:pr.data.by||{}});
+      const done=P().done;
+      // non-critical extras: never block the page if a table/policy is missing
+      const [v,ss,cc]=await Promise.all([done.length?sb.from('videos').select('id,title,subject:subjects(name)').in('id',done):Promise.resolve({data:[]}),
+        sb.from('subscriptions').select('id,status,amount,payment_method,created_at,expires_at,plan:plans(name)').eq('user_id',u.id).order('id',{ascending:false}),
+        sb.from('certificates').select('*').order('issued_at',{ascending:false})].map(p=>Promise.resolve(p).catch(e=>({error:e,data:null}))));
+      vids=v.data||[];subs=ss.data||[];certs=(cc.data||[]).filter(x=>!x.user_id||x.user_id===u.id);
+    }catch(x){if(x.message==='REDIRECT')redirected=true;else{console.warn('[ilogia profile]',x);loadFailed=true}}
     if(redirected){}
     else if(loadFailed){$('#app').innerHTML='<div class="card gate"><h1>تعذّر تحميل ملفك</h1><p>حدثت مشكلة أثناء الاتصال بالخادم. تحقّق من الإنترنت ثم أعد المحاولة.</p><button class="btn" id="rt" type="button">إعادة المحاولة</button></div>';$('#rt').onclick=()=>location.reload()}
-    else draw();
+    /* manual study timer — same local cache the lesson player writes to */
+    let run=null,sess=0;
+    const tick=()=>{sess++;const p=P(),k=dkey();p.secs++;(p.by=p.by||{})[k]=(p.by[k]||0)+1;if(!p.days.includes(k))p.days.push(k);LS(PK,p);const e=$('#tm');if(e)e.textContent=fmt(sess);const t=$('#tTot');if(t)t.textContent=dur(p.secs)};
+    const streak=p=>{let n=0,d=new Date();while(p.days.includes(dkey(d))){n++;d.setDate(d.getDate()-1)}return n};
+    function showTab(t){if(!$('#tab-'+t))t='home';tab=t;$$('[data-tb]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.tb===t));$$('[data-tp]').forEach(p=>p.hidden=p.dataset.tp!==t);history.replaceState(null,'','#'+t)}
     function draw(){
-      const p=prog(),f=pf(),name=prof.full_name||meta.full_name||meta.name||'',t0=dkey(new Date()),tm=mins(p.by[t0]||0),goal=Math.max(5,+f.goal||30),st=streak(p);
+      const p=P(),f=pf(),name=prof.full_name||meta.full_name||meta.name||'',t0=dkey(),tm=mins(p.by[t0]||0),goal=Math.max(5,+f.goal||30),st=streak(p);
       const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return{k:dkey(d),l:d.toLocaleDateString('ar-EG',{weekday:'short'}),m:mins(p.by[dkey(d)]||0)}}),mx=Math.max(30,...days.map(d=>d.m));
       const act=sub?.status==='active',plan=act?`<span class="pill">${esc(sub.plan_name)}</span>`:'<span class="pill n">بدون اشتراك</span>';
       const B=[['i-book','أول درس',p.done.length>=1],['i-flame','٣ أيام متتالية',st>=3],['u-clock','ساعة مذاكرة',p.secs>=3600],['i-cup','١٠ دروس',p.done.length>=10],['i-star','هدف اليوم',tm>=goal]];
+      const subBox=!sub?'<p>لا يوجد اشتراك حاليًا.</p>':act?`<p><b>${esc(sub.plan_name)}</b> — مفعّل</p>${sub.expires_at?`<div class="bar2"><i data-w="${Math.min(100,Math.round(sub.days_left/30*100))}"></i></div><p>متبقٍ ${AR(sub.days_left)} يومًا (حتى ${dateAr(sub.expires_at)})</p>`:''}`:sub.status==='pending'?'<p>إيصالك قيد المراجعة.</p>':sub.status==='rejected'?'<p>تم رفض الإيصال الأخير، أرسل إيصالًا جديدًا.</p>':'<p>انتهى اشتراكك السابق.</p>';
+      const rows=subs.length?`<div style="overflow-x:auto"><table class="tbl"><thead><tr><th>التاريخ</th><th>الباقة</th><th>المبلغ</th><th>الطريقة</th><th>الحالة</th></tr></thead><tbody>${subs.map(x=>`<tr><td>${dateAr(x.created_at)}</td><td>${esc(x.plan?.name||'—')}</td><td>${x.amount!=null?AR(x.amount)+' ج.م':'—'}</td><td>${esc(PML[x.payment_method]||x.payment_method||'—')}</td><td><span class="pill ${x.status==='active'?'':'n'}">${SBL[x.status]||esc(x.status)}</span></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">لا توجد مدفوعات بعد.</div>';
+      const certHtml=certs.length?`<ul class="ls">${certs.map(c=>`<li style="justify-content:space-between;flex-wrap:wrap"><span><b>${esc(c.subject_name||c.title||'شهادة إتمام')}</b><br><small>${esc(c.serial||'')} · ${dateAr(c.issued_at)}</small></span>${c.revoked?'<span class="pill n">ملغاة</span>':`<a class="btn s g" href="verify.html?c=${encodeURIComponent(c.serial||'')}">عرض وتحميل</a>`}</li>`).join('')}</ul>`:'<div class="empty">لا توجد شهادات بعد. أكمل دروس المادة من الصفحة الرئيسية وستظهر شهادتك هنا.</div>';
+      const TABS=[['home','نظرة عامة'],['study','المذاكرة'],['billing','اشتراكي ومدفوعاتي'],['certs','شهاداتي'],['settings','إعداداتي']];
       $('#app').innerHTML=`
 <section class="phero up"><div class="av" style="--col:${esc(f.col)}" aria-hidden="true"><svg class="ic" width="54" height="54"><use href="#i-${esc(f.av)}"/></svg></div>
 <div><h1>${esc(name||'طالب ilogia')}</h1><p>${esc(u.email)}</p><div class="chips">${plan}${prof.grade_id?`<span class="pill n">${esc(grades.find(g=>g.id==prof.grade_id)?.name||'')}</span>`:''}${prof.is_platform_admin?'<span class="pill w2">مدير</span>':''}</div></div>
 <div class="streak"><svg class="fl" width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6 6 6 12a6 6 0 0 1-12 0c0-3 2-4 3-6 1 1 1.5 2 2 2 1-2 1-5 1-8z" fill="#E5A93C"/><path d="M12 22a3.5 3.5 0 0 1-3.5-3.5c0-2 2-3 3.5-5 1.5 2 3.5 3 3.5 5A3.5 3.5 0 0 1 12 22z" fill="#D4AF37"/></svg><b>${AR(st)}</b><small>أيام متتالية</small></div></section>
-<div class="g2"><section class="card up" style="animation-delay:.08s"><h2>هدف اليوم</h2><div class="ring"><svg viewBox="0 0 120 120"><circle class="t" cx="60" cy="60" r="52"/><circle class="v" id="rv" cx="60" cy="60" r="52"/></svg><div><b>${AR(tm)}</b><small>من ${AR(goal)} د</small></div></div></section>
-<section class="card up" style="animation-delay:.14s"><h2>آخر ٧ أيام (بالدقائق)</h2><div class="week">${days.map(d=>`<div class="${d.k===t0?'td':''}"><i data-h="${Math.round(d.m/mx*100)}" title="${AR(d.m)} د"></i>${d.l}</div>`).join('')}</div></section></div>
-<section class="card up"><h2>إنجازاتي</h2><div class="stats"><div><b>${AR(p.secs>=3600?Math.floor(p.secs/3600)+'س '+mins(p.secs%3600)+'د':mins(p.secs)+' د')}</b>وقت المذاكرة</div><div><b>${AR(p.done.length)}</b>دروس منجزة</div><div><b>${AR(st)}</b>أيام متتالية</div></div>
+<div class="tabs seg" role="tablist">${TABS.map(t=>`<button class="btn" type="button" data-tb="${t[0]}" aria-pressed="false">${t[1]}</button>`).join('')}</div>
+
+<div data-tp="home" id="tab-home" class="tp"><div class="g2"><section class="card up"><h2>هدف اليوم</h2><div class="ring"><svg viewBox="0 0 120 120"><circle class="t" cx="60" cy="60" r="52"/><circle class="v" id="rv" cx="60" cy="60" r="52"/></svg><div><b>${AR(tm)}</b><small>من ${AR(goal)} د</small></div></div></section>
+<section class="card up"><h2>آخر ٧ أيام (بالدقائق)</h2><div class="week">${days.map(d=>`<div class="${d.k===t0?'td':''}"><i data-h="${Math.round(d.m/mx*100)}" title="${AR(d.m)} د"></i>${d.l}</div>`).join('')}</div></section></div>
+<section class="card up"><h2>إنجازاتي</h2><div class="stats"><div><b>${dur(p.secs)}</b>وقت المذاكرة</div><div><b>${AR(p.done.length)}</b>دروس منجزة</div><div><b>${AR(st)}</b>أيام متتالية</div></div>
 <div class="bd" style="margin-block-start:1rem">${B.map(b=>`<div class="${b[2]?'on':''}"><span><svg class="${b[0][0]==='u'?'ui':'ic'}" width="30" height="30" aria-hidden="true"><use href="#${b[0]}"/></svg></span>${b[1]}</div>`).join('')}</div></section>
-<div class="g2"><section class="card up"><h2>اشتراكي</h2>${!sub?'<p>لا يوجد اشتراك حاليًا.</p>':act?`<p><b>${esc(sub.plan_name)}</b> — مفعّل</p>${sub.expires_at?`<div class="bar2"><i data-w="${Math.min(100,Math.round(sub.days_left/30*100))}"></i></div><p>متبقٍ ${AR(sub.days_left)} يومًا</p>`:''}`:sub.status==='pending'?'<p>إيصالك قيد المراجعة.</p>':sub.status==='rejected'?'<p>تم رفض الإيصال الأخير، أرسل إيصالًا جديدًا.</p>':'<p>انتهى اشتراكك السابق.</p>'}<a class="btn s" style="margin-block-start:.8rem" href="./#plans">${act?'تجديد / ترقية':'اختر باقة'}</a></section>
-<section class="card up"><h2>الدروس التي أنهيتها</h2>${vids.length?`<ul class="ls">${vids.slice(0,8).map(v=>`<li>${esc(v.title)}</li>`).join('')}</ul>`:'<div class="empty">لم تُكمل أي درس بعد. ابدأ من قسم الدروس.</div>'}</section></div>
-<section class="card up"><h2>تعديل بياناتي</h2><form id="pf"><label>الاسم الكامل <small style="font-weight:400;color:var(--mut)">(يظهر على الشهادة)</small><input id="fn" value="${esc(name)}" autocomplete="name" maxlength="80"></label>
+<section class="card up"><h2>اشتراكي</h2>${subBox}<a class="btn s" style="margin-block-start:.8rem" href="./#plans">${act?'تجديد / ترقية':'اختر باقة'}</a></section></div>
+
+<div data-tp="study" id="tab-study" class="tp" hidden><section class="card up"><h2>جلسة مذاكرة</h2><div style="text-align:center"><div id="tm" style="font:700 2.6rem var(--serif);direction:ltr;margin:.4rem 0">00:00:00</div>
+<p style="margin:0 0 .8rem">إجمالي وقتك: <b id="tTot">${dur(p.secs)}</b></p><div style="display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap"><button class="btn" id="tmBtn" type="button">بدء جلسة مذاكرة</button><button class="btn g" id="tmReset" type="button">إنهاء الجلسة</button></div></div></section>
+<section class="card up"><h2>الدروس التي أنهيتها (${AR(vids.length)})</h2>${vids.length?`<ul class="ls">${vids.map(v=>`<li>${esc(v.title)}${v.subject?.name?` <small style="color:var(--mut)">· ${esc(v.subject.name)}</small>`:''}</li>`).join('')}</ul>`:'<div class="empty">لم تُكمل أي درس بعد. ابدأ من قسم الدروس.</div>'}<a class="btn s g" style="margin-block-start:.8rem" href="./#videos">تصفّح الدروس</a></section></div>
+
+<div data-tp="billing" id="tab-billing" class="tp" hidden><section class="card up"><h2>اشتراكي</h2>${subBox}<a class="btn s" style="margin-block-start:.8rem" href="./#plans">${act?'تجديد / ترقية':'اختر باقة'}</a></section>
+<section class="card up"><h2>سجل المدفوعات</h2>${rows}</section></div>
+
+<div data-tp="certs" id="tab-certs" class="tp" hidden><section class="card up"><h2>شهاداتي</h2>${certHtml}</section></div>
+
+<div data-tp="settings" id="tab-settings" class="tp" hidden><section class="card up"><h2>تعديل بياناتي</h2><form id="pf"><label>الاسم الكامل <small style="font-weight:400;color:var(--mut)">(يظهر على الشهادة)</small><input id="fn" value="${esc(name)}" autocomplete="name" maxlength="80"></label>
 <label>الصف الدراسي<select id="fg"><option value="">اختر صفّك…</option>${grades.map(g=>`<option value="${g.id}" ${g.id==prof.grade_id?'selected':''}>${esc(g.name)}</option>`).join('')}</select></label>
 <label>هدف المذاكرة اليومي (بالدقائق)<input id="fgo" type="number" min="5" max="600" step="5" value="${goal}"></label>
 <div><b style="font-size:.9rem">الصورة الرمزية</b><div class="pick" id="pa" style="margin-block-start:.4rem">${AVS.map((a,i)=>`<button type="button" data-a="${a}" aria-pressed="${a===f.av}" aria-label="أيقونة ${AR(i+1)}"><svg class="ic" width="26" height="26"><use href="#i-${a}"/></svg></button>`).join('')}</div>
 <div class="pick cols" id="pc" style="margin-block-start:.5rem">${COLS.map(c=>`<button type="button" data-c="${c}" style="--c1:${c}" aria-pressed="${c===f.col}" aria-label="لون"></button>`).join('')}</div></div>
 <p class="msg" id="m1" role="status"></p><button class="btn" id="sv">حفظ التعديلات</button></form></section>
-<section class="card up"><h2>الأمان</h2><form id="pw"><label>كلمة سر جديدة<input id="np" type="password" minlength="8" autocomplete="new-password"></label><p class="msg" id="m2" role="status"></p><div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" id="sp">تغيير كلمة السر</button><button type="button" class="btn g" id="out">تسجيل الخروج</button></div></form></section>`;
-      requestAnimationFrame(()=>setTimeout(()=>{$('#rv').style.strokeDashoffset=327*(1-Math.min(1,tm/goal));document.querySelectorAll('[data-h]').forEach(e=>e.style.blockSize=e.dataset.h+'%');document.querySelectorAll('[data-w]').forEach(e=>e.style.inlineSize=e.dataset.w+'%')},60));
+<section class="card up"><h2>الأمان</h2><form id="pw"><label>كلمة سر جديدة<input id="np" type="password" minlength="8" autocomplete="new-password"></label><p class="msg" id="m2" role="status"></p><div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" id="sp">تغيير كلمة السر</button><button type="button" class="btn g" id="out">تسجيل الخروج</button></div></form></section></div>`;
+      $$('[data-tb]').forEach(b=>b.onclick=()=>showTab(b.dataset.tb));showTab(tab);
+      requestAnimationFrame(()=>setTimeout(()=>{$('#rv').style.strokeDashoffset=327*(1-Math.min(1,tm/goal));$$('[data-h]').forEach(e=>e.style.blockSize=e.dataset.h+'%');$$('[data-w]').forEach(e=>e.style.inlineSize=e.dataset.w+'%')},60));
+      $('#tmBtn').onclick=()=>{if(run){clearInterval(run);run=null;$('#tmBtn').textContent='متابعة الجلسة'}else{run=setInterval(tick,1000);$('#tmBtn').textContent='إيقاف مؤقت'}};
+      $('#tmReset').onclick=()=>{clearInterval(run);run=null;sess=0;$('#tm').textContent='00:00:00';$('#tmBtn').textContent='بدء جلسة مذاكرة';draw()};
       let av=f.av,col=f.col;
       $('#pa').onclick=e=>{const b=e.target.closest('button');if(!b)return;av=b.dataset.a;[...$('#pa').children].forEach(x=>x.setAttribute('aria-pressed',x===b));$('.av use').setAttribute('href','#i-'+av)};
       $('#pc').onclick=e=>{const b=e.target.closest('button');if(!b)return;col=b.dataset.c;[...$('#pc').children].forEach(x=>x.setAttribute('aria-pressed',x===b));$('.av').style.setProperty('--col',col)};
@@ -98,7 +134,7 @@ else{
         if(fn.length<3){m.className='msg e';return m.textContent='اكتب اسمك الكامل (٣ أحرف على الأقل)'}
         if(!gr){m.className='msg e';return m.textContent='اختر صفّك الدراسي'}
         b.disabled=true;m.textContent='جارٍ الحفظ…';
-        LS('el_profile',{av,col,goal:Math.min(600,Math.max(5,+$('#fgo').value||30))});   // avatar + daily goal are device-only preferences
+        LS('el_profile',{av,col,goal:Math.min(600,Math.max(5,+$('#fgo').value||30))});
         try{const r=await T(sb.rpc('save_my_profile',{p_name:fn,p_grade_id:gr}));if(r.error)throw r.error;
           prof.full_name=fn;prof.grade_id=gr;draw();$('#m1').className='msg o';$('#m1').textContent='تم حفظ اسمك وصفّك'}
         catch(x){console.error('[ilogia profile save]',x);b.disabled=false;m.className='msg e';m.textContent=/Could not find the function|PGRST202/.test(String(x.message))?'حفظ البيانات غير مفعّل على الخادم بعد. تواصل مع إدارة المنصة.':x.message==='TIMEOUT'?'انتهت المهلة، حاول مرة أخرى':'تعذّر الحفظ، حاول مرة أخرى'}};
@@ -107,6 +143,8 @@ else{
         b.disabled=true;try{const r=await T(sb.auth.updateUser({password:pw}));if(r.error)throw r.error;$('#np').value='';m.className='msg o';m.textContent='تم تغيير كلمة السر'}catch(x){m.className='msg e';m.textContent=x.message==='TIMEOUT'?'انتهت المهلة، حاول مرة أخرى':(x.message||'تعذّر التغيير')}b.disabled=false};
       $('#out').onclick=async()=>{try{await sb.auth.signOut()}catch(x){console.warn(x)}location.replace('login.html')};
     }
+    if(!redirected&&!loadFailed)draw();
+    addEventListener('hashchange',()=>{if($('#tab-home'))showTab((location.hash||'#home').slice(1))});
   }
 }
 </script>
