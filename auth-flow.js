@@ -7,7 +7,7 @@ export const $ = (s, r = document) => r.querySelector(s);
 export const withTimeout = (p, ms = 20000) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('TIMEOUT')), ms))]);
 
 export async function getClient() {
-  for (const u of ['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm', 'https://esm.sh/@supabase/supabase-js@2.45.4']) {
+  for (const u of ['./vendor/supabase.esm.js', 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']) {
     try {
       const m = await withTimeout(import(u), 15000);
       return m.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });

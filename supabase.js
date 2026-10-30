@@ -1,6 +1,6 @@
 // ilogia — single Supabase client + service layer (replaces api/*.php).
 // Only the public publishable key lives here. Security is enforced by RLS (see supabase/001_schema.sql).
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+import { createClient } from './vendor/supabase.esm.js';
 
 export const supabase = createClient(
   'https://zugwicbbfbefbbwugfxq.supabase.co',

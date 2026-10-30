@@ -2,14 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#136F58"><script src="app.js"></script>
 <title>التحقق من شهادة — ilogia</title>
 <meta name="robots" content="noindex">
 <meta name="description" content="التحقق من صحة شهادات منصة ilogia برقم الشهادة.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap"></noscript>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap"></noscript>
+
+
+
 <link rel="stylesheet" href="ilogia-ds.css">
 </head>
 <body>
@@ -40,7 +40,7 @@
 <footer class="foot-site"><div class="w"><div class="cols"><div><a class="brand" href="index.html" style="margin:0 0 var(--sp-3)"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b></span></a><p>منصة تعليمية عربية تقدّم دروسًا مصوّرة ومراجع دراسية حسب الصف والمادة.</p></div><div><h4>المنصة</h4><a href="index.html#videos">الدروس</a><a href="index.html#library">المكتبة</a><a href="index.html#plans">الباقات</a></div><div><h4>حسابك</h4><a href="login.html">تسجيل الدخول</a><a href="profile.html">ملفي</a></div></div><div class="base"><span>© ilogia — جميع الحقوق محفوظة</span><a href="verify.html">التحقق من الشهادات</a></div></div></footer>
 
 <script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
+import { createClient } from '/vendor/supabase.esm.js';
 const sb=createClient('https://zugwicbbfbefbbwugfxq.supabase.co','sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};   // textContent only: names are user data
@@ -98,13 +98,13 @@ function fillRecord(c){const set=(id,v)=>{$('#'+id).textContent=v||'—'};set('r
 async function exportCanvas(){await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
   const host=mk('div');host.style.cssText='position:fixed;left:-99999px;top:0';const el=await buildCert(current);host.append(el);document.body.append(host);
   try{return await html2canvas(el,{scale:2,backgroundColor:'#FFFEF9',useCORS:true,width:1123,height:794})}finally{host.remove()}}
-const dl=(href,name)=>{const a=document.createElement('a');a.href=href;a.download=name;document.body.append(a);a.click();a.remove()};
+const dl=(href,name)=>{if(/^data:/.test(href)&&window.ilogiaSave&&window.ilogiaSave(name,(href.match(/^data:([^;,]+)/)||[])[1]||'application/octet-stream',href.split(',')[1])){$('#msg').textContent='تم حفظ الملف في التنزيلات';return}const a=document.createElement('a');a.href=href;a.download=name;document.body.append(a);a.click();a.remove()};
 const busy=async(b,f)=>{if(!current)return;const t=b.textContent;b.disabled=true;b.textContent='جاري التجهيز...';try{await f()}catch(x){console.error(x);$('#msg').textContent='تعذّر التجهيز، حاول مرة أخرى'}finally{b.disabled=false;b.textContent=t}};
 $('#bImg').onclick=e=>busy(e.currentTarget,async()=>{const cv=await exportCanvas();dl(cv.toDataURL('image/png'),'ilogia-certificate-'+current.serial+'.png')});
 $('#bPdf').onclick=e=>busy(e.currentTarget,async()=>{const cv=await exportCanvas();await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-  const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});pdf.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',0,0,297,210);pdf.save('ilogia-certificate-'+current.serial+'.pdf')});
+  const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});pdf.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',0,0,297,210);(()=>{const nm='ilogia-certificate-'+current.serial+'.pdf';if(window.ILOGIA_IN_APP&&window.ilogiaSave(nm,'application/pdf',pdf.output('datauristring').split(',')[1]))$('#msg').textContent='تم حفظ الملف في التنزيلات';else pdf.save(nm)})()});
 $('#bPrint').onclick=()=>{if(current)print()};
-$('#bCopy').onclick=async()=>{if(!current)return;try{await navigator.clipboard.writeText(verifyUrl(current.serial,current.site_url));$('#msg').textContent='تم نسخ رابط التحقق'}catch(x){$('#msg').textContent=verifyUrl(current.serial,current.site_url)}};
+$('#bCopy').onclick=async()=>{if(!current)return;try{await window.ilogiaCopy(verifyUrl(current.serial,current.site_url));$('#msg').textContent='تم نسخ رابط التحقق'}catch(x){$('#msg').textContent=verifyUrl(current.serial,current.site_url)}};
 $('#f').onsubmit=e=>{e.preventDefault();check($('#q').value)};
 const c0=new URLSearchParams(location.search).get('c');if(c0){$('#q').value=c0;check(c0)}
 </script>

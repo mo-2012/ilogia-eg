@@ -66,7 +66,7 @@ const unwrap = ({ data, error }) => { if (error) throw error; return data; };
 const SB_URL = 'https://zugwicbbfbefbbwugfxq.supabase.co';
 export async function uploadBig(path, file, bucket = 'library', onProgress) {
   if (file.size <= 6 * 1024 * 1024) { const r = unwrap(await supabase.storage.from(bucket).upload(path, file, { contentType: file.type || 'application/octet-stream' })); onProgress && onProgress(1); return r; }
-  const tus = await import('https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/+esm');
+  const tus = await import('./vendor/tus.esm.js');
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) throw new Error('سجّل الدخول الأول');
   await new Promise((resolve, reject) => {

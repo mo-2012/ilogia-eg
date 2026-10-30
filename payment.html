@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#136F58"><script src="/app.js"></script><link rel="stylesheet" href="/fonts.css">
 <title>حالة الدفع — ilogia</title><meta name="robots" content="noindex">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+
 <style>
-:root{--ivory:#faf7ef;--navy:#14264a;--lime:#a6d608;--ok:#1f9d55;--bad:#d64545;--wait:#e0a100;--mut:#5c6783}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 80% 0,#eef4d3 0,transparent 45%),var(--ivory);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;color:var(--navy);padding:20px}
-.card{width:100%;max-width:440px;background:#fff;border-radius:24px;padding:40px 28px 32px;text-align:center;box-shadow:0 20px 60px rgba(20,38,74,.12);animation:up .5s ease both}
-.brand{font-weight:700;letter-spacing:.3px;color:var(--navy);text-decoration:none;display:inline-block;margin-bottom:22px;font-size:20px}
+:root{--ivory:#FBF9F5;--navy:#192428;--lime:#82C341;--ok:#136F58;--bad:#BA1A1A;--wait:#9A7B1C;--mut:#5C6B66;--em:#136F58;--line:#E4DFD5}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;min-height:100dvh;display:grid;place-items:center;background:radial-gradient(circle at 80% 0,#E3F3EC 0,transparent 45%),var(--ivory);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;color:var(--navy);padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));-webkit-tap-highlight-color:transparent}
+.card{width:100%;max-width:440px;background:#fff;border:1px solid var(--line);border-block-start:6px solid var(--em);border-radius:16px;padding:36px 24px 28px;text-align:center;box-shadow:0 20px 50px -16px rgba(19,111,88,.18);animation:up .5s ease both}
+.brand{font-weight:700;letter-spacing:.3px;color:var(--em);text-decoration:none;display:inline-block;margin-bottom:22px;font-size:20px}
 .ico{width:112px;height:112px;margin:0 auto 22px;display:block}
 .ring{fill:none;stroke-width:5;stroke-linecap:round;stroke-dasharray:302;stroke-dashoffset:302;transform:rotate(-90deg);transform-origin:50% 50%}
 .mark{fill:none;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:80;stroke-dashoffset:80}
@@ -19,12 +19,12 @@
 .go .ring{animation:draw .7s ease forwards}.go .fill{animation:pop .5s .55s ease forwards;opacity:.1}.go .mark{animation:draw .45s .6s ease forwards}.go .mark2{animation-delay:.8s}
 .gif{width:140px;height:140px;margin:0 auto 14px;display:block}
 .credit{margin-top:22px;font-size:11px;color:#9aa3b8}.credit a{color:inherit}
-.spin{width:112px;height:112px;margin:0 auto 22px;border-radius:50%;border:6px solid #e6e9f2;border-top-color:var(--navy);animation:rot 1s linear infinite}
+.spin{width:112px;height:112px;margin:0 auto 22px;border-radius:50%;border:6px solid #E4DFD5;border-top-color:var(--em);animation:rot 1s linear infinite}
 h1{font-size:24px;margin:0 0 10px}p{margin:0 0 6px;color:var(--mut);line-height:1.8;font-size:15px}
-.plan{display:inline-block;margin:14px 0 4px;padding:8px 18px;background:#f3f8dc;border:1px solid #dbe9a0;border-radius:999px;font-weight:600;font-size:15px}
-.acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}
-.btn{display:inline-block;padding:13px 26px;border-radius:14px;background:var(--navy);color:#fff;text-decoration:none;font-weight:600;font-size:15px;font-family:inherit}
-.btn.g{background:transparent;color:var(--navy);border:1.5px solid #cfd5e6}
+.plan{display:inline-block;margin:14px 0 4px;padding:8px 18px;background:#E3F3EC;border:1px solid #b9dccd;border-radius:999px;font-weight:600;font-size:15px;color:var(--em)}
+.acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:24px}.acts .btn{flex:1 1 140px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 26px;border-radius:8px;background:var(--em);color:#fff;text-decoration:none;font-weight:600;font-size:15px;font-family:inherit;touch-action:manipulation}.btn:active{transform:scale(.97)}
+.btn.g{background:transparent;color:var(--navy);border:1.5px solid var(--line)}
 @keyframes draw{to{stroke-dashoffset:0}}@keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.08)}to{transform:scale(1);opacity:.1}}
 @keyframes rot{to{transform:rotate(360deg)}}@keyframes up{from{opacity:0;transform:translateY(16px)}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important}}

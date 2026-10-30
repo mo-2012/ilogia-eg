@@ -2,15 +2,15 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="app.js"></script>
 <meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#136F58">
 <title>تسجيل الدخول — ilogia</title>
 <meta name="description" content="تسجيل الدخول إلى منصة ilogia التعليمية.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Serif:wght@600;700&family=Noto+Naskh+Arabic:wght@600;700&display=swap"></noscript>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&icon_names=arrow_back,badge,check,co_present,format_quote,gpp_bad,image,link,login,menu,person,picture_as_pdf,print,school,shield,verified,verified_user&display=swap"></noscript>
+
+
+
 <link rel="stylesheet" href="ilogia-ds.css">
 </head>
 <body class="auth">
@@ -32,10 +32,10 @@
           <input id="name" type="text" autocomplete="name" maxlength="80" placeholder="كما تريد ظهوره على الشهادة">
         </label>
         <label id="emailWrap">البريد الإلكتروني
-          <input id="email" type="email" inputmode="email" autocomplete="email" dir="ltr" placeholder="name@example.com">
+          <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="next" dir="ltr" placeholder="name@example.com">
         </label>
         <label id="pwWrap">كلمة السر
-          <span class="pw"><input id="pw" type="password" autocomplete="current-password" dir="ltr"><button type="button" id="showPw" aria-pressed="false">إظهار</button></span>
+          <span class="pw"><input id="pw" type="password" autocomplete="current-password" enterkeyhint="go" dir="ltr"><button type="button" id="showPw" aria-pressed="false">إظهار</button></span>
         </label>
         <div class="fieldmsg" id="fmsg" role="alert"></div>
         <div class="row" id="forgotRow"><button type="button" class="lnk" id="forgot">نسيت كلمة السر؟</button></div>
@@ -46,6 +46,7 @@
         <div id="gsi" aria-label="تسجيل الدخول بحساب جوجل"></div>
         <button type="button" class="btn g" id="gRedirect">المتابعة بحساب جوجل</button>
       </div>
+      <p class="hint app-only" style="text-align:center;margin-block-start:var(--sp-3)">كنت بتسجّل بحساب جوجل؟ اضغط «نسيت كلمة السر» مرة واحدة لتعيين كلمة سر، وبعدها ادخل بها هنا.</p>
       <p class="foot"><span id="switchText">ليس لديك حساب؟</span> <button type="button" class="lnk" id="switch">إنشاء حساب جديد</button></p>
     </section>
 
@@ -107,11 +108,11 @@ function setMode(m, keepNotice) {
   $('#emailWrap').hidden = m === 'recover';
   $('#pwWrap').hidden = m === 'forgot';
   $('#forgotRow').hidden = m !== 'login';
-  $('#socialBox').hidden = !(m === 'login' || m === 'register');
+  $('#socialBox').hidden = !(m === 'login' || m === 'register') || !!window.ILOGIA_IN_APP;
   $('#switchText').textContent = x.sw[0]; $('#switch').textContent = x.sw[1]; $('#switch').parentElement.hidden = m === 'recover';
   $('#pw').autocomplete = m === 'login' ? 'current-password' : 'new-password';
   field(''); if (!keepNotice) notice($('#notice'), '', '');
-  show('authView'); if (m === 'login' || m === 'register') loadGsi();
+  show('authView'); if ((m === 'login' || m === 'register') && !window.ILOGIA_IN_APP) loadGsi();
 }
 
 // ---------- navigation after a successful, VERIFIED sign-in ----------
