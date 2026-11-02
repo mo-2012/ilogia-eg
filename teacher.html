@@ -35,7 +35,7 @@
 
 <section id="dash" hidden>
   <div class="stats"><div><b id="sV">٠</b>دروس مرفوعة</div><div><b id="sF">٠</b>مذكرات مرفوعة</div><div><b id="sS">٠</b>طلاب أنهوا دروسك</div><div><b id="sC">٠</b>مرات إكمال</div><div><b id="sH">٠</b>ساعات مذاكرة</div></div>
-  <div class="tabs seg"><button class="btn" data-t="file" aria-pressed="true">رفع مذكرة</button><button class="btn" data-t="vid" aria-pressed="false">إضافة درس فيديو</button><button class="btn" data-t="mine" aria-pressed="false">ملفاتي</button></div>
+  <div class="tabs seg"><button class="btn" data-t="file" aria-pressed="true">رفع مذكرة</button><button class="btn" data-t="vid" aria-pressed="false">إضافة درس فيديو</button><button class="btn" data-t="mine" aria-pressed="false">ملفاتي</button><button class="btn" data-t="page" aria-pressed="false">صفحتي ومنشوراتي</button></div>
 
   <form id="ff" class="card" data-p="file" novalidate><h3 style="margin-top:0">رفع مذكرة / ملف</h3>
     <label>العنوان<input id="fTitle"></label>
@@ -53,6 +53,16 @@
     <label><input id="vFree" type="checkbox">مجاني</label><p class="err" id="ve" role="alert"></p><button class="btn" id="vb">إضافة الدرس</button></form>
 
   <div class="card" data-p="mine" hidden><h3 style="margin-top:0">دروسي</h3><div id="lv"></div><h3>مذكراتي</h3><div id="ll"></div></div>
+  <div data-p="page" hidden>
+    <form id="pf" class="card" novalidate><h3 style="margin-top:0">صفحتي العامة</h3>
+      <label>عنوان قصير <small>(اختياري)</small><input id="pHead" maxlength="120" placeholder="مدرس رياضيات · خبرة ١٠ سنوات"></label>
+      <label>نبذة عنك <small>(اختياري)</small><textarea id="pBio" rows="4" maxlength="1000"></textarea></label>
+      <p class="err" id="pe" role="alert"></p><button class="btn" id="pb">حفظ الصفحة</button> <a id="pLink" href="teachers.html">عرض صفحتي للطلاب</a></form>
+    <form id="nf" class="card" novalidate><h3 style="margin-top:0">منشور جديد</h3>
+      <label>اكتب إعلانًا أو رسالة لطلابك<textarea id="nBody" rows="3" maxlength="2000"></textarea></label>
+      <p class="err" id="ne" role="alert"></p><button class="btn" id="nb">نشر</button></form>
+    <div class="card"><h3 style="margin-top:0">منشوراتي</h3><div id="np"></div></div>
+  </div>
 </section>
 <p id="msg" class="ok" role="status"></p>
 </main>
@@ -62,7 +72,7 @@ const URL_='https://zugwicbbfbefbbwugfxq.supabase.co';
 const sb=createClient(URL_,'sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const mk=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};   // textContent only (no XSS)
-const ERR={already_teacher:'حسابك معتمد كمعلم بالفعل',pending_exists:'عندك طلب قيد المراجعة بالفعل',name_required:'اكتب اسمك الكامل (٣ أحرف على الأقل)',phone_invalid:'رقم الموبايل لازم يكون ١١ رقم ويبدأ بـ 01',subject_required:'اكتب المادة التي تدرّسها',bio_required:'اكتب نبذة عن خبرتك (١٠ أحرف على الأقل)',forbidden:'ليس لديك صلاحية المعلم','Invalid login credentials':'البريد أو كلمة المرور غير صحيحة','Email not confirmed':'فعّل بريدك الإلكتروني أولًا'};
+const ERR={post_limit_reached:'وصلت للحد اليومي (٢٠ منشورًا)',already_teacher:'حسابك معتمد كمعلم بالفعل',pending_exists:'عندك طلب قيد المراجعة بالفعل',name_required:'اكتب اسمك الكامل (٣ أحرف على الأقل)',phone_invalid:'رقم الموبايل لازم يكون ١١ رقم ويبدأ بـ 01',subject_required:'اكتب المادة التي تدرّسها',bio_required:'اكتب نبذة عن خبرتك (١٠ أحرف على الأقل)',forbidden:'ليس لديك صلاحية المعلم','Invalid login credentials':'البريد أو كلمة المرور غير صحيحة','Email not confirmed':'فعّل بريدك الإلكتروني أولًا'};
 const em=x=>{const m=String(x?.message||x);for(const k in ERR)if(m.includes(k))return ERR[k];return m||'حدث خطأ، حاول مرة أخرى'};
 const flash=t=>{$('#msg').textContent=t;setTimeout(()=>{if($('#msg').textContent===t)$('#msg').textContent=''},4000)};
 let me=null,grades=[],subjects=[];
@@ -72,7 +82,7 @@ async function boot(){const {data:{session}}=await sb.auth.getSession();
   me=session.user;const [r,p]=await Promise.all([sb.rpc('is_teacher'),sb.from('profiles').select('full_name').eq('id',me.id).maybeSingle()]);
   $('#whoName').textContent=p.data?.full_name||me.email;
   if(r.error||!r.data){show('apply');return loadApply(p.data?.full_name||'')}
-  show('dash');await loadMeta();refresh()}
+  show('dash');await loadMeta();refresh();loadPage()}
 function show(w){$('#login').hidden=w!=='login';$('#apply').hidden=w!=='apply';$('#dash').hidden=w!=='dash';$('#who').hidden=w==='login'}
 async function loadApply(name){const r=await sb.rpc('my_teacher_request'),q=(r.data||[])[0],box=$('#apStatus');box.replaceChildren();$('#af').hidden=false;if(!$('#aName').value)$('#aName').value=name;
   if(q?.status==='pending'){$('#af').hidden=true;box.append(mk('p','طلبك قيد المراجعة من الإدارة. هتقدر تدخل لوحة المعلم أول ما يتم قبوله، حدّث الصفحة بعد كده.','ok'))}
@@ -127,6 +137,26 @@ $('#ff').onsubmit=async e=>{e.preventDefault();const er=$('#fe'),f=$('#fFile').f
     if(r.error){await sb.storage.from('library').remove([path]);throw r.error}
     $('#ff').reset();flash('تم رفع المذكرة');refresh()}catch(x){er.textContent=em(x)}
   bar.hidden=true;bar.firstChild.style.inlineSize='0';$('#fb').disabled=false};
+
+// ---- صفحتي العامة + المنشورات (متابعة/إعجاب الطلاب من teachers.html) ----
+async function loadPage(){
+  const [p,po]=await Promise.all([sb.from('teacher_profiles').select('headline,bio').eq('user_id',me.id).maybeSingle(),
+    sb.from('teacher_posts').select('id,body,created_at,is_hidden').eq('teacher_id',me.id).order('created_at',{ascending:false}).limit(50)]);
+  $('#pHead').value=p.data?.headline||'';$('#pBio').value=p.data?.bio||'';$('#pLink').href='teachers.html?id='+me.id;
+  const rows=po.data||[];
+  $('#np').replaceChildren(...(rows.length?rows.map(r=>{const it=mk('div',null,'item'),t=mk('div');t.append(mk('span',r.body));
+    if(r.is_hidden)t.append(mk('em','أخفتها الإدارة','pill'));
+    t.append(mk('br'),mk('small',new Date(r.created_at).toLocaleDateString('ar-EG')));
+    const d=mk('button','حذف','btn d');d.onclick=()=>delPost(r.id);it.append(t,d);return it}):[mk('p','لا توجد منشورات بعد')]))}
+async function delPost(id){if(!confirm('حذف المنشور نهائيًا؟'))return;
+  try{const x=await sb.from('teacher_posts').delete().eq('id',id).eq('teacher_id',me.id);if(x.error)throw x.error;flash('تم الحذف');loadPage()}catch(x){flash(em(x))}}
+$('#pf').onsubmit=async e=>{e.preventDefault();const er=$('#pe');er.textContent='';$('#pb').disabled=true;
+  try{const r=await sb.from('teacher_profiles').upsert({user_id:me.id,headline:$('#pHead').value.trim()||null,bio:$('#pBio').value.trim()||null,updated_at:new Date().toISOString()},{onConflict:'user_id'});
+    if(r.error)throw r.error;flash('تم حفظ صفحتك')}catch(x){er.textContent=em(x)}$('#pb').disabled=false};
+$('#nf').onsubmit=async e=>{e.preventDefault();const er=$('#ne'),body=$('#nBody').value.trim();er.textContent='';
+  if(!body)return er.textContent='اكتب نص المنشور';if(body.length>2000)return er.textContent='المنشور أطول من ٢٠٠٠ حرف';
+  $('#nb').disabled=true;try{const r=await sb.from('teacher_posts').insert({teacher_id:me.id,body});if(r.error)throw r.error;$('#nBody').value='';flash('تم نشر المنشور');loadPage()}
+  catch(x){er.textContent=em(x)}$('#nb').disabled=false};
 boot();
 </script>
 </body>

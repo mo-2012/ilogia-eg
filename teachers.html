@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="theme-color" content="#136F58"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="app.js"></script>
+<title>المعلمون — ilogia</title>
+<meta name="description" content="تابع معلميك على ilogia واقرأ إعلاناتهم ومنشوراتهم.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="ilogia-ds.css">
+<style>
+.tw{max-inline-size:720px;margin-inline:auto}
+.av{inline-size:48px;block-size:48px;border-radius:50%;background:var(--tint);color:var(--primary-c);display:grid;place-items:center;font:700 1.2rem var(--serif);flex:none;object-fit:cover}
+.av.l{inline-size:84px;block-size:84px;font-size:2rem}
+.who2{display:flex;gap:var(--sp-3);align-items:center}
+.who2 a{color:var(--ink);font-weight:700;text-decoration:none}
+.who2 small{display:block;color:var(--mut);font-size:var(--fs-12)}
+.pb{white-space:pre-wrap;overflow-wrap:anywhere;margin:var(--sp-3) 0}
+.acts{display:flex;gap:var(--sp-2);align-items:center}
+.liked{color:var(--pen)}
+.tc{display:flex;gap:var(--sp-3);align-items:center;justify-content:space-between;flex-wrap:wrap}
+.pf{text-align:center}.pf .av{margin:0 auto var(--sp-3)}
+.empty{text-align:center;color:var(--mut);padding:var(--sp-8) 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="w in">
+  <a class="brand" href="index.html" aria-label="ilogia"><span class="lm"><span class="ms f" aria-hidden="true">school</span></span><span><b>ilogia</b><small>المعلمون</small></span></a>
+  <a class="btn g s" href="index.html">الرئيسية</a>
+</div></header>
+<main class="page"><div class="tw">
+  <div id="tabs" class="tabs seg"><button class="btn" data-t="feed" aria-pressed="true">المنشورات</button><button class="btn" data-t="following" aria-pressed="false">من أتابعهم</button><button class="btn" data-t="teachers" aria-pressed="false">المعلمون</button></div>
+  <div id="view" aria-live="polite"></div>
+  <p id="msg" class="err" role="status"></p>
+</div></main>
+<script type="module">
+import { supabase as sb } from './supabase.js';
+const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const mk=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};   // textContent only: no XSS from user text
+const ERR={not_authenticated:'سجّل الدخول أولًا',cannot_follow_self:'لا يمكنك متابعة نفسك',teacher_not_found:'المعلم غير موجود',post_not_found:'المنشور لم يعد متاحًا'};
+const em=x=>{const m=String(x?.message||x);for(const k in ERR)if(m.includes(k))return ERR[k];return 'حدث خطأ، حاول مرة أخرى'};
+const flash=t=>{const m=$('#msg');m.textContent=t;setTimeout(()=>{if(m.textContent===t)m.textContent=''},4000)};
+const needLogin=()=>{location.href='login.html?next='+encodeURIComponent('teachers.html'+location.search)};
+const ago=d=>{const s=(Date.now()-new Date(d))/1000;if(s<60)return 'الآن';if(s<3600)return 'منذ '+AR(Math.floor(s/60))+' د';if(s<86400)return 'منذ '+AR(Math.floor(s/3600))+' س';return new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric'})};
+const TID=new URLSearchParams(location.search).get('id'),UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+let me=null;
+
+function avatar(name,url,big){
+  if(/^https:\/\//i.test(url||'')){const i=mk('img',null,'av'+(big?' l':''));i.src=url;i.alt='';i.loading='lazy';return i}
+  return mk('div',(name||'؟').trim().charAt(0),'av'+(big?' l':''))}
+function followBtn(t,onChange){
+  if(me&&me.id===t.id)return mk('span');
+  const b=mk('button',null,'btn s');
+  const paint=()=>{b.textContent=t.i_follow?'تتابعه ✓':'متابعة';b.className='btn s'+(t.i_follow?' g':'');b.setAttribute('aria-pressed',t.i_follow)};paint();
+  b.onclick=async()=>{if(!me)return needLogin();b.disabled=true;
+    const r=await sb.rpc('toggle_follow',{p_teacher:t.id});b.disabled=false;
+    if(r.error)return flash(em(r.error));
+    t.i_follow=r.data;t.followers=Math.max(0,Number(t.followers)+(r.data?1:-1));paint();onChange&&onChange()};
+  return b}
+function teacherCard(t){
+  const c=mk('div',null,'card tc'),w=mk('div',null,'who2'),i=mk('div'),a=mk('a',t.full_name||'معلم');a.href='teachers.html?id='+t.id;
+  i.append(a,mk('small',[t.headline,AR(t.followers)+' متابع'].filter(Boolean).join(' · ')));w.append(avatar(t.full_name,t.avatar_url),i);
+  const f=followBtn(t,()=>i.lastChild.textContent=[t.headline,AR(t.followers)+' متابع'].filter(Boolean).join(' · '));c.append(w,f);return c}
+function postCard(p){
+  const c=mk('article',null,'card'),w=mk('div',null,'who2'),i=mk('div'),a=mk('a',p.teacher_name||'معلم');a.href='teachers.html?id='+p.teacher_id;
+  i.append(a,mk('small',ago(p.created_at)));w.append(avatar(p.teacher_name,p.teacher_avatar),i);
+  const lb=mk('button',null,'btn g s');
+  const paint=()=>{lb.replaceChildren(mk('span','favorite','ms'+(p.liked_by_me?' f liked':'')),document.createTextNode(' '+AR(p.likes)));lb.setAttribute('aria-pressed',p.liked_by_me);lb.setAttribute('aria-label','إعجاب')};paint();
+  lb.onclick=async()=>{if(!me)return needLogin();lb.disabled=true;const r=await sb.rpc('toggle_like',{p_post:p.id});lb.disabled=false;
+    if(r.error)return flash(em(r.error));p.liked_by_me=r.data.liked;p.likes=r.data.likes;paint()};
+  c.append(w,mk('p',p.body,'pb'),mk('div',null,'acts'));c.lastChild.append(lb);return c}
+
+async function feed(box,opts){
+  const list=mk('div'),more=mk('button','عرض المزيد','btn g');more.hidden=true;box.append(list,more);let last=null;
+  async function page(){more.disabled=true;
+    const r=await sb.rpc('list_posts',{p_teacher:opts.teacher||null,p_following:!!opts.following,p_limit:10,p_before:last});
+    more.disabled=false;if(r.error)return flash(em(r.error));
+    const rows=r.data||[];rows.forEach(p=>list.append(postCard(p)));if(rows.length)last=rows[rows.length-1].created_at;
+    more.hidden=rows.length<10;
+    if(!list.children.length)list.append(mk('p',opts.following?'لا منشورات من المعلمين الذين تتابعهم بعد.':'لا توجد منشورات بعد.','empty'))}
+  more.onclick=page;await page()}
+
+async function showTab(t){
+  const v=$('#view');v.replaceChildren();
+  document.querySelectorAll('#tabs [data-t]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
+  if(t==='teachers'){const r=await sb.rpc('list_teachers_public');if(r.error)return flash(em(r.error));
+    const rows=r.data||[];v.append(...(rows.length?rows.map(teacherCard):[mk('p','لا يوجد معلمون بعد.','empty')]));return}
+  if(t==='following'&&!me){const p=mk('p','سجّل الدخول لترى منشورات من تتابعهم. ','empty'),a=mk('a','تسجيل الدخول');a.href='login.html?next=teachers.html';p.append(a);v.append(p);return}
+  await feed(v,{following:t==='following'})}
+
+async function showTeacher(){
+  $('#tabs').hidden=true;const v=$('#view');
+  const back=mk('a','← كل المعلمين','btn g s');back.href='teachers.html';back.style.marginBlockEnd='1rem';
+  const r=UUID.test(TID||'')?await sb.rpc('get_teacher_public',{p_id:TID}):{data:[]};
+  const t=(r.data||[])[0];if(!t){v.append(back,mk('p','هذا المعلم غير موجود.','empty'));return}
+  document.title=(t.full_name||'معلم')+' — ilogia';
+  const c=mk('div',null,'card pf');c.append(avatar(t.full_name,t.avatar_url,true),mk('h1',t.full_name||'معلم'));
+  if(t.headline)c.append(mk('p',t.headline));if(t.bio)c.append(mk('p',t.bio,'pb'));
+  const n=mk('p',AR(t.followers)+' متابع');c.append(n,followBtn(t,()=>n.textContent=AR(t.followers)+' متابع'));
+  v.append(back,c);await feed(v,{teacher:t.id})}
+
+document.querySelectorAll('#tabs [data-t]').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+(async()=>{const{data:{session}}=await sb.auth.getSession();me=session?.user||null;TID?showTeacher():showTab('feed')})();
+</script>
+</body>
+</html>
