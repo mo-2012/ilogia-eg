@@ -1,3 +1,4 @@
+import { ssoAuth } from './ilogia-sso.js';
 // ilogia — shared auth helpers for login.html / setup.html. Only the PUBLIC publishable key lives here;
 // every permission is enforced by RLS + RPCs in Supabase (see INSTALL.md).
 export const SB_URL = 'https://zugwicbbfbefbbwugfxq.supabase.co';
@@ -10,7 +11,7 @@ export async function getClient() {
   for (const u of ['./vendor/supabase.esm.js', 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']) {
     try {
       const m = await withTimeout(import(u), 15000);
-      return m.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+      return m.createClient(SB_URL, SB_KEY, { auth: { ...ssoAuth, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
     } catch (e) { console.warn('[ilogia] could not load supabase-js from', u, e); }
   }
   return null;

@@ -1,11 +1,12 @@
 // ilogia — single Supabase client + service layer (replaces api/*.php).
 // Only the public publishable key lives here. Security is enforced by RLS (see supabase/001_schema.sql).
 import { createClient } from './vendor/supabase.esm.js';
+import { ssoAuth } from './ilogia-sso.js';
 
 export const supabase = createClient(
   'https://zugwicbbfbefbbwugfxq.supabase.co',
   'sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',
-  { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
+  { auth: { ...ssoAuth, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } }
 );
 
 const unwrap = ({ data, error }) => { if (error) throw error; return data; };

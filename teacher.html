@@ -68,8 +68,9 @@
 </main>
 <script type="module">
 import { createClient } from '/vendor/supabase.esm.js';
+import { ssoAuth } from '/ilogia-sso.js';
 const URL_='https://zugwicbbfbefbbwugfxq.supabase.co';
-const sb=createClient(URL_,'sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+const sb=createClient(URL_,'sb_publishable_34jNpaqwtFeYboTVgO-mYw_efc0T-Ew',{auth:{...ssoAuth,persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const $=s=>document.querySelector(s),AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const mk=(t,x,c)=>{const e=document.createElement(t);if(x!=null)e.textContent=x;if(c)e.className=c;return e};   // textContent only (no XSS)
 const ERR={post_limit_reached:'وصلت للحد اليومي (٢٠ منشورًا)',already_teacher:'حسابك معتمد كمعلم بالفعل',pending_exists:'عندك طلب قيد المراجعة بالفعل',name_required:'اكتب اسمك الكامل (٣ أحرف على الأقل)',phone_invalid:'رقم الموبايل لازم يكون ١١ رقم ويبدأ بـ 01',subject_required:'اكتب المادة التي تدرّسها',bio_required:'اكتب نبذة عن خبرتك (١٠ أحرف على الأقل)',forbidden:'ليس لديك صلاحية المعلم','Invalid login credentials':'البريد أو كلمة المرور غير صحيحة','Email not confirmed':'فعّل بريدك الإلكتروني أولًا'};
