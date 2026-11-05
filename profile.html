@@ -9,6 +9,24 @@
 
 <link rel="stylesheet" href="ilogia-ds.css">
 
+<style>
+.svc{margin-block:var(--sp-8) var(--sp-6)}
+.svc>h2{font:700 var(--fs-24)/1.4 var(--serif);margin:0 0 .2rem}
+.svc>p{margin:0 0 var(--sp-4);color:var(--mut);font-size:var(--fs-14)}
+.svc-g{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)}
+@media(max-width:900px){.svc-g{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.svc-g{grid-template-columns:1fr}}
+.svc-a{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);box-shadow:var(--shadow);color:var(--ink);text-decoration:none;transition:border-color .2s,transform .2s,background .2s}
+.svc-a:hover{border-color:var(--primary-c);background:var(--cream);transform:translateY(-2px)}
+.svc-a:focus-visible{outline:2px solid var(--primary-c);outline-offset:2px}
+.svc-i{flex:none;display:grid;place-items:center;inline-size:48px;block-size:48px;border-radius:var(--r-lg);background:var(--tint);color:var(--primary-c)}
+.svc-i svg{inline-size:26px;block-size:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.svc-t{flex:1;min-inline-size:0}
+.svc-t b{display:block;font:700 var(--fs-16)/1.4 var(--sans)}
+.svc-t small{display:block;color:var(--mut);font-size:var(--fs-12);direction:ltr;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.svc-go{flex:none;inline-size:20px;block-size:20px;fill:none;stroke:var(--mut);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s,stroke .2s}
+.svc-a:hover .svc-go{stroke:var(--primary-c);transform:translateX(-3px)}
+</style>
 </head>
 <body class="prof has-tabbar">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -54,6 +72,15 @@ const pf=()=>{const o={av:'book',col:COLS[0],goal:30,...(LS('el_profile')||{})};
 const TM=['system','light','dark'],TI={system:'u-monitor',light:'u-sun',dark:'u-moon'};
 const theme=m=>{const d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';$('#themeBtn').innerHTML='<svg class="ui" width="20" height="20" aria-hidden="true"><use href="#'+TI[m]+'"/></svg>'};
 theme(LS('el_theme')||'system');$('#themeBtn').onclick=()=>{const n=TM[(TM.indexOf(LS('el_theme')||'system')+1)%3];LS('el_theme',n);theme(n)};
+const SVC=[
+['الذكاء الاصطناعي','ai','M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z'],
+['Arena','arena','M7 4h10v5a5 5 0 0 1-10 0zM7 6H4c0 3 1.5 4.5 3 5M17 6h3c0 3-1.5 4.5-3 5M12 14v4M8 21h8M9 18h6'],
+['لوحة المدرس','teacher','M3 4h18v11H3zM12 15v5M8 20h8M7 9h6'],
+['البطاقات التعليمية','cards','M5 8h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2zM7 8V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2'],
+['المخطط الدراسي','planner','M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM3 10h18M8 3v4M16 3v4M8 14h3'],
+['المكتبة التعليمية','library','M3.5 5.6C6.2 4.3 9.3 4.4 12 6.2v13c-2.7-1.8-5.8-1.9-8.5-.6zM20.5 5.6c-2.7-1.3-5.8-1.2-8.5.6v13c2.7-1.8 5.8-1.9 8.5-.6z']
+];
+const svcHtml=`<section class="svc" aria-labelledby="svcT"><h2 id="svcT">خدمات منظومة iLogia</h2><p>كل أدواتك الدراسية في مكان واحد، وبنفس حسابك.</p><div class="svc-g">${SVC.map(x=>`<a class="svc-a" href="https://${x[1]}.ilogia-eg.com" rel="noopener"><span class="svc-i" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${x[2]}"/></svg></span><span class="svc-t"><b>${x[0]}</b><small>${x[1]}.ilogia-eg.com</small></span><svg class="svc-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></a>`).join('')}</div></section>`;
 const gate=(t,b)=>$('#app').innerHTML=`<div class="card gate"><h1>${t}</h1><p>${b}</p><a class="btn" href="./">العودة للرئيسية</a></div>`;
 async function loadSb(){for(const u of['/vendor/supabase.esm.js','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']){try{const m=await T(import(u));const{ssoAuth}=await import('/ilogia-sso.js');return m.createClient(SB_URL,SB_KEY,{auth:{...ssoAuth,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(x){console.warn(x)}}return null}
 const sb=await loadSb();
@@ -122,7 +149,7 @@ else{
 <div><b style="font-size:.9rem">الصورة الرمزية</b><div class="pick" id="pa" style="margin-block-start:.4rem">${AVS.map((a,i)=>`<button type="button" data-a="${a}" aria-pressed="${a===f.av}" aria-label="أيقونة ${AR(i+1)}"><svg class="ic" width="26" height="26"><use href="#i-${a}"/></svg></button>`).join('')}</div>
 <div class="pick cols" id="pc" style="margin-block-start:.5rem">${COLS.map(c=>`<button type="button" data-c="${c}" style="--c1:${c}" aria-pressed="${c===f.col}" aria-label="لون"></button>`).join('')}</div></div>
 <p class="msg" id="m1" role="status"></p><button class="btn" id="sv">حفظ التعديلات</button></form></section>
-<section class="card up"><h2>الأمان</h2><form id="pw"><label>كلمة سر جديدة<input id="np" type="password" minlength="8" autocomplete="new-password"></label><p class="msg" id="m2" role="status"></p><div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" id="sp">تغيير كلمة السر</button><button type="button" class="btn g" id="out">تسجيل الخروج</button></div></form></section></div>`;
+<section class="card up"><h2>الأمان</h2><form id="pw"><label>كلمة سر جديدة<input id="np" type="password" minlength="8" autocomplete="new-password"></label><p class="msg" id="m2" role="status"></p><div style="display:flex;gap:.6rem;flex-wrap:wrap"><button class="btn" id="sp">تغيير كلمة السر</button><button type="button" class="btn g" id="out">تسجيل الخروج</button></div></form></section></div>${svcHtml}`;
       $$('[data-tb]').forEach(b=>b.onclick=()=>showTab(b.dataset.tb));showTab(tab);
       requestAnimationFrame(()=>setTimeout(()=>{$('#rv').style.strokeDashoffset=327*(1-Math.min(1,tm/goal));$$('[data-h]').forEach(e=>e.style.blockSize=e.dataset.h+'%');$$('[data-w]').forEach(e=>e.style.inlineSize=e.dataset.w+'%')},60));
       $('#tmBtn').onclick=()=>{if(run){clearInterval(run);run=null;$('#tmBtn').textContent='متابعة الجلسة'}else{run=setInterval(tick,1000);$('#tmBtn').textContent='إيقاف مؤقت'}};
