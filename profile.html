@@ -55,7 +55,7 @@ const TM=['system','light','dark'],TI={system:'u-monitor',light:'u-sun',dark:'u-
 const theme=m=>{const d=m==='dark'||(m==='system'&&matchMedia('(prefers-color-scheme:dark)').matches);document.documentElement.dataset.theme=d?'dark':'light';$('#themeBtn').innerHTML='<svg class="ui" width="20" height="20" aria-hidden="true"><use href="#'+TI[m]+'"/></svg>'};
 theme(LS('el_theme')||'system');$('#themeBtn').onclick=()=>{const n=TM[(TM.indexOf(LS('el_theme')||'system')+1)%3];LS('el_theme',n);theme(n)};
 const gate=(t,b)=>$('#app').innerHTML=`<div class="card gate"><h1>${t}</h1><p>${b}</p><a class="btn" href="./">العودة للرئيسية</a></div>`;
-async function loadSb(){for(const u of['/vendor/supabase.esm.js','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']){try{const m=await T(import(u));return m.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(x){console.warn(x)}}return null}
+async function loadSb(){for(const u of['/vendor/supabase.esm.js','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']){try{const m=await T(import(u));const{ssoAuth}=await import('/ilogia-sso.js');return m.createClient(SB_URL,SB_KEY,{auth:{...ssoAuth,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(x){console.warn(x)}}return null}
 const sb=await loadSb();
 const SBL={active:'مفعّل',pending:'قيد المراجعة',rejected:'مرفوض',expired:'منتهي'},PML={fawaterk:'دفع إلكتروني',vodafone_cash:'فودافون كاش',orange_cash:'أورنج كاش',instapay:'إنستاباي'};
 if(!sb)gate('تعذّر الاتصال','تحقق من الإنترنت وأعد تحميل الصفحة.');
