@@ -4,6 +4,6 @@ Disallow: /admin
 Allow: /teacher
 Allow: /profile
 Allow: /setup
-Disallow: /login
+Allow: /login
 
 Sitemap: https://ilogia-eg.com/sitemap.xml
