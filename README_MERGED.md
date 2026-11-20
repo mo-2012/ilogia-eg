@@ -18,6 +18,6 @@
 - Added from Android: dark mode, study timer, completed lessons + streak ("حسابي"), FAQ/support section, Vodafone Cash number 01224561951 (InstaPay disabled).
 
 ## ilogia
-- الاسم الجديد: ilogia (واجهة + عنوان + نصوص). معرّفات قاعدة البيانات (ilearn_*) والإيميل ilearnweb50@gmail.com كما هي حتى لا يتأثر Supabase.
+- الاسم الجديد: ilogia (واجهة + عنوان + نصوص). معرّفات قاعدة البيانات (ilearn_*) والإيميل ilogia.eg.support@gmail.com كما هي حتى لا يتأثر Supabase.
 - أيقونات متحركة (SVG): كتاب، لمبة، صاروخ، نجمة، شعلة المتابعة اليومية، كأس، قلم.
 - login.gif: خلفية متحركة لنافذة الدخول. كونفيتي عند إكمال الدرس. حركة دخول للصفحة الرئيسية. تحترم prefers-reduced-motion.

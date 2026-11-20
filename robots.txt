@@ -1,9 +1,9 @@
 User-agent: *
-Allow: /verify
+Allow: /
 Disallow: /admin
-Allow: /teacher
-Allow: /profile
-Allow: /setup
-Allow: /login
+Disallow: /crm
+
+# الصفحات الخاصة (login/profile/setup/teacher/payment/verify) تحمل وسم noindex
+# وتُترك قابلة للزحف عمدًا حتى يقرأ جوجل الوسم.
 
 Sitemap: https://ilogia-eg.com/sitemap.xml
