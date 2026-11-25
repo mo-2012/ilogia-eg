@@ -3,6 +3,7 @@
 <head><script>(function(){var p=location.pathname,n=p.replace(/(^|\/)index\.html$/,'$1').replace(/\.html$/,'');if(n!==p)history.replaceState(null,'',n+location.search+location.hash)})()</script><meta name="robots" content="noindex,nofollow"><meta name="description" content="لوحة إدارة منصة ilogia.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://esm.sh https://cdnjs.cloudflare.com https://accounts.google.com https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://accounts.google.com; frame-src https://www.youtube-nocookie.com https://accounts.google.com; frame-ancestors 'none';">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="app.js"></script><link rel="stylesheet" href="fonts.css">
 <title>لوحة تحكم ilogia</title>
 <script src="https://cdn.tailwindcss.com"></script>
@@ -392,7 +393,7 @@ input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{ou
 
 <script type="module">
 import { adminSignIn, adminSession, adminSignOut, uploadBig } from "./admin-adapter.js";
-import { supabase } from "./supabase.js";
+import { supabase } from "./admin-supabase.js";
 // غيّر ده لو رفعت المشروع في مجلد فرعي مختلف
 const API_BASE = "api";
 let allSubs = [];

@@ -81,7 +81,7 @@ dialog#dr .in{padding:var(--sp-6);display:grid;gap:var(--sp-4)}
 <p id="toast" role="status" style="position:fixed;inset-block-end:16px;inset-inline-start:16px;background:var(--ink);color:#fff;padding:.5rem 1rem;border-radius:99px;display:none"></p>
 
 <script type="module">
-import {supabase as sb} from './supabase.js';
+import {supabase as sb} from './admin-supabase.js';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],AR=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const STAGES=[['new','جديد'],['interested','مهتم'],['subscribed','مشترك'],['renew','تجديد قريب'],['expired','منتهي'],['lost','فقدناه']],SL=Object.fromEntries(STAGES);
