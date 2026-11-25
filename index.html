@@ -28,9 +28,169 @@
 .svc-t small{display:block;color:var(--mut);font-size:var(--fs-12);direction:ltr;text-align:start;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .svc-go{flex:none;inline-size:20px;block-size:20px;fill:none;stroke:var(--mut);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s,stroke .2s}
 .svc-a:hover .svc-go{stroke:var(--primary-c);transform:translateX(-3px)}
+
+/* Skeleton Shimmer Loading */
+@keyframes skShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.sk-card, .sk-plan {
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #e4dfd5);
+  border-radius: var(--r-xl, 20px);
+  padding: var(--sp-4, 20px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow, 0 4px 20px -2px rgba(25,36,40,.05));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sk-card { min-height: 150px; }
+.sk-plan { min-height: 290px; }
+.sk-bar {
+  border-radius: 6px;
+  background: linear-gradient(90deg, #edeae3 25%, #f8f6f0 50%, #edeae3 75%);
+  background-size: 200% 100%;
+  animation: skShimmer 1.6s ease-in-out infinite;
+}
+.sk-circle {
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #edeae3 25%, #f8f6f0 50%, #edeae3 75%);
+  background-size: 200% 100%;
+  animation: skShimmer 1.6s ease-in-out infinite;
+  flex: none;
+}
+.sk-chip {
+  display: inline-block;
+  inline-size: 76px;
+  block-size: 32px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #edeae3 25%, #f8f6f0 50%, #edeae3 75%);
+  background-size: 200% 100%;
+  animation: skShimmer 1.6s ease-in-out infinite;
+  margin-inline-end: 8px;
+}
+
+
+/* Full Page Home Skeleton Screen */
+#home-skeleton {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--surface-cream, #FBF9F5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+  pointer-events: auto;
+}
+#home-skeleton.loaded {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+@media (max-width: 768px) {
+  .sk-hide-sm { display: none !important; }
+  #home-skeleton .hero-grid-sk { grid-template-columns: 1fr !important; }
+}
+
 </style>
 </head>
 <body class="home has-tabbar">
+<!-- Full-Page Skeleton Screen (Fades out when database responds) -->
+<div id="home-skeleton" aria-hidden="true">
+  <!-- 1. Header Skeleton -->
+  <div style="background:#fbf9f5;border-bottom:1px solid #e4dfd5;position:sticky;top:0;z-index:10;">
+    <div class="w" style="display:flex;align-items:center;justify-content:space-between;min-height:68px;">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="sk-bar" style="inline-size:40px;block-size:40px;border-radius:12px;"></div>
+        <div class="sk-bar" style="inline-size:110px;block-size:22px;"></div>
+      </div>
+      <div style="display:flex;gap:10px;" class="sk-hide-sm">
+        <div class="sk-chip" style="inline-size:65px;block-size:28px;"></div>
+        <div class="sk-chip" style="inline-size:65px;block-size:28px;"></div>
+        <div class="sk-chip" style="inline-size:65px;block-size:28px;"></div>
+        <div class="sk-chip" style="inline-size:65px;block-size:28px;"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div class="sk-chip" style="inline-size:85px;block-size:36px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Hero Skeleton -->
+  <section style="background:#fbf9f5;border-bottom:1px solid #e4dfd5;padding:clamp(40px,7vw,80px) 0;">
+    <div class="w hero-grid-sk" style="display:grid;grid-template-columns:1.25fr 1fr;gap:clamp(24px,5vw,60px);align-items:center;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="sk-bar" style="inline-size:35%;block-size:18px;border-radius:999px;"></div>
+        <div class="sk-bar" style="inline-size:92%;block-size:44px;"></div>
+        <div class="sk-bar" style="inline-size:78%;block-size:44px;"></div>
+        <div class="sk-bar" style="inline-size:88%;block-size:18px;margin-top:10px;"></div>
+        <div class="sk-bar" style="inline-size:65%;block-size:18px;"></div>
+        <div style="display:flex;gap:14px;margin-top:16px;">
+          <div class="sk-bar" style="inline-size:135px;block-size:46px;border-radius:12px;"></div>
+          <div class="sk-bar" style="inline-size:125px;block-size:46px;border-radius:12px;"></div>
+        </div>
+      </div>
+      <div class="sk-card" style="min-height:220px;padding:32px;">
+        <div class="sk-bar" style="inline-size:42px;block-size:42px;border-radius:12px;"></div>
+        <div class="sk-bar" style="inline-size:90%;block-size:22px;margin-top:14px;"></div>
+        <div class="sk-bar" style="inline-size:72%;block-size:22px;"></div>
+        <div class="sk-bar" style="inline-size:32%;block-size:14px;margin-top:auto;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Path / Steps Skeleton -->
+  <section style="padding:48px 0;border-bottom:1px solid #e4dfd5;">
+    <div class="w">
+      <div style="margin-bottom:28px;display:flex;flex-direction:column;gap:10px;">
+        <div class="sk-bar" style="inline-size:100px;block-size:16px;"></div>
+        <div class="sk-bar" style="inline-size:300px;block-size:26px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;">
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+        <div class="sk-card" style="min-height:110px;text-align:center;align-items:center;"><div class="sk-circle" style="inline-size:34px;block-size:34px;"></div><div class="sk-bar" style="inline-size:60%;block-size:14px;margin-top:8px;"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Lessons / Cards Skeleton -->
+  <section style="background:#f4f1ea;padding:52px 0;">
+    <div class="w">
+      <div style="margin-bottom:24px;display:flex;flex-direction:column;gap:10px;">
+        <div class="sk-bar" style="inline-size:80px;block-size:16px;"></div>
+        <div class="sk-bar" style="inline-size:260px;block-size:26px;"></div>
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;">
+        <div class="sk-chip" style="inline-size:75px;block-size:32px;"></div>
+        <div class="sk-chip" style="inline-size:75px;block-size:32px;"></div>
+        <div class="sk-chip" style="inline-size:75px;block-size:32px;"></div>
+        <div class="sk-chip" style="inline-size:75px;block-size:32px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+        <div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Plans Skeleton -->
+  <section style="padding:52px 0;">
+    <div class="w">
+      <div style="text-align:center;margin-bottom:30px;display:flex;flex-direction:column;align-items:center;gap:10px;">
+        <div class="sk-bar" style="inline-size:90px;block-size:16px;"></div>
+        <div class="sk-bar" style="inline-size:240px;block-size:26px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+        <div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div><div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div><div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5c3-1.5 6-1.5 9 1v14c-3-2.5-6-2.5-9-1z" fill="#82C341"/><path d="M21 5c-3-1.5-6-1.5-9 1v14c3-2.5 6-2.5 9-1z" fill="#fff"/></symbol>
 <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M12 2.5a6.5 6.5 0 0 0-3.6 11.9c.7.5 1.1 1.2 1.1 2V17h5v-.6c0-.8.4-1.5 1.1-2A6.5 6.5 0 0 0 12 2.5z" fill="#D4AF37"/><path d="M9.5 20h5M10.5 22h3" fill="none"/></symbol>
@@ -71,11 +231,11 @@
 <ol class="path"><li><b>٠١</b><svg class="ic pi a-flip" width="36" height="36" aria-hidden="true"><use href="#i-book"/></svg><span>المعرفة</span><p>درس مصوّر منظّم يشرح الفكرة من أصلها.</p></li><li><b>٠٢</b><svg class="ic pi a-glow" width="36" height="36" aria-hidden="true"><use href="#i-bulb"/></svg><span>الفهم</span><p>ربط الفكرة بما سبقها وبأمثلة من الواقع.</p></li><li><b>٠٣</b><svg class="ic pi a-bob" width="36" height="36" aria-hidden="true"><use href="#i-q"/></svg><span>التفكير</span><p>أسئلة تدفع الطالب للاستنتاج بنفسه.</p></li><li><b>٠٤</b><svg class="ic pi a-write" width="36" height="36" aria-hidden="true"><use href="#i-pen"/></svg><span>التدريب</span><p>مراجع وملفات للتطبيق والمراجعة.</p></li><li><b>٠٥</b><svg class="ic pi a-shine" width="36" height="36" aria-hidden="true"><use href="#i-cup"/></svg><span>الإنجاز</span><p>إتمام الوحدات ومتابعة التقدّم.</p></li><li><b>٠٦</b><svg class="ic pi a-fly" width="36" height="36" aria-hidden="true"><use href="#i-rocket"/></svg><span>التحوّل</span><p>طالب أكثر ثقة واستقلالًا.</p></li></ol></div></section>
 <section class="s alt" id="videos"><div class="w"><div class="hd"><p class="eb">الدروس</p><h2>دروس مصوّرة حسب الصف والمادة</h2><p>اختر الصف والمادة، وابدأ من حيث تحتاج.</p></div>
 <div class="tools"><label class="sr" for="vq">ابحث</label><input id="vq" type="search" placeholder="ابحث في الدروس"><label class="sr" for="vg">الصف</label><select id="vg"></select></div>
-<div class="chips" id="vchips" role="group" aria-label="المواد"></div><p class="results" id="vcount" aria-live="polite"></p><div class="grid" id="vlist" aria-live="polite"></div></div></section>
+<div class="chips" id="vchips" role="group" aria-label="المواد"><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span></div><p class="results" id="vcount" aria-live="polite"></p><div class="grid" id="vlist" aria-live="polite"><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div></div></div></section>
 <section class="s" id="library"><div class="w"><div class="hd"><p class="eb">المكتبة</p><h2>مذكرات ومراجع دراسية للطلاب</h2></div>
 <div class="tools"><label class="sr" for="lq">ابحث</label><input id="lq" type="search" placeholder="ابحث في المكتبة"><label class="sr" for="lg">الصف</label><select id="lg"></select></div>
-<div class="chips" id="lchips" role="group" aria-label="المواد"></div><p class="results" id="lcount" aria-live="polite"></p><div class="grid" id="llist" aria-live="polite"></div></div></section>
-<section class="s alt" id="plans"><div class="w"><div class="hd"><p class="eb">الاشتراك</p><h2>باقات الاشتراك في المنصة التعليمية</h2></div><div id="subNote"></div><div class="plans" id="plansGrid"></div></div></section>
+<div class="chips" id="lchips" role="group" aria-label="المواد"><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span><span class="sk-chip" aria-hidden="true"></span></div><p class="results" id="lcount" aria-live="polite"></p><div class="grid" id="llist" aria-live="polite"><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div><div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div></div></div></section>
+<section class="s alt" id="plans"><div class="w"><div class="hd"><p class="eb">الاشتراك</p><h2>باقات الاشتراك في المنصة التعليمية</h2></div><div id="subNote"></div><div class="plans" id="plansGrid"><div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div><div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div><div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div></div></div></section>
 <section class="s alt" id="certs"><div class="w"><div class="hd"><p class="eb">الإنجازات والشهادات</p><h2>شهادة إتمام عند استيفاء الشروط</h2><p>تُصدر الشهادة من حسابك بعد إكمال جميع دروس المادة (للصف والترم نفسه، بحد أدنى ٥ دروس) وبشرط اشتراك فعّال، ويتم التحقق من الأهلية في قاعدة البيانات.</p></div>
 <ol class="cert-steps"><li><b>١. أكمل دروس المادة</b><span>سجّل إكمال كل درس من مشغّل الدرس.</span></li><li><b>٢. اطلب الشهادة</b><span>من صفحة «ملفي» ثم قسم الشهادات.</span></li><li><b>٣. تحقّق منها</b><span>لكل شهادة رقم مسلسل فريد يمكن التحقق منه علنًا.</span></li></ol>
 <div class="cert-panel"><p>لديك رقم شهادة؟ تأكد من صحتها وحالتها (سارية أو ملغاة) من صفحة التحقق.</p><a class="btn" href="verify.html">التحقق من شهادة</a></div></div></section>
@@ -239,7 +399,30 @@ $('#doneBtn').addEventListener('click',e=>{if(P().done.includes(curVid))burst(e.
 const renderAll=()=>{render('v');render('l');renderPlans()};
 async function loadSb(){for(const u of['/vendor/supabase.esm.js','https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm']){
   try{const m=await T(import(u),15000);const{ssoAuth}=await import('/ilogia-sso.js');return m.createClient(SB_URL,SB_KEY,{auth:{...ssoAuth,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(x){console.warn('[ilogia] load failed',u,x)}}return null}
-authArea();for(const s of['#vlist','#llist'])$(s).innerHTML='<div class="sk"></div>'.repeat(4);
+
+
+function hideHomeSkeleton() {
+  const sk = document.getElementById('home-skeleton');
+  if (sk && !sk.classList.contains('loaded')) {
+    sk.classList.add('loaded');
+    setTimeout(() => { try { sk.remove(); } catch(_) { sk.style.display = 'none'; } }, 450);
+  }
+}
+setTimeout(hideHomeSkeleton, 6000); // safety fallback
+
+function showSkeletons() {
+  const skCard = '<div class="sk-card" aria-hidden="true"><div style="display:flex;align-items:center;gap:12px"><div class="sk-circle"></div><div class="sk-bar" style="inline-size:35%;block-size:14px"></div></div><div class="sk-bar" style="inline-size:80%;block-size:20px;margin-top:6px"></div><div class="sk-bar" style="inline-size:55%;block-size:12px"></div><div class="sk-bar" style="inline-size:25%;block-size:22px;border-radius:999px;margin-top:auto"></div></div>'.repeat(4);
+  const skPlan = '<div class="sk-plan" aria-hidden="true"><div class="sk-bar" style="inline-size:50%;block-size:22px"></div><div class="sk-bar" style="inline-size:70%;block-size:32px;margin:8px 0"></div><div class="sk-bar" style="inline-size:90%;block-size:14px"></div><div class="sk-bar" style="inline-size:85%;block-size:14px"></div><div class="sk-bar" style="inline-size:80%;block-size:14px"></div><div class="sk-bar" style="inline-size:100%;block-size:42px;border-radius:12px;margin-top:auto"></div></div>'.repeat(3);
+  const skChips = '<span class="sk-chip" aria-hidden="true"></span>'.repeat(4);
+  const vl = $('#vlist'), ll = $('#llist'), pg = $('#plansGrid'), vc = $('#vchips'), lc = $('#lchips');
+  if (vl) vl.innerHTML = skCard;
+  if (ll) ll.innerHTML = skCard;
+  if (pg) pg.innerHTML = skPlan;
+  if (vc) vc.innerHTML = skChips;
+  if (lc) lc.innerHTML = skChips;
+}
+
+authArea(); showSkeletons();
 (async()=>{sb=await loadSb();
   if(!sb){for(const s of['#vlist','#llist','#plansGrid'])$(s).innerHTML='<div class="state">تعذّر الاتصال بالخادم. تحقق من الإنترنت ثم أعد المحاولة.<br><button class="btn g s" onclick="location.reload()">إعادة المحاولة</button></div>';return}
   {let g=null;try{g=(await T(sb.auth.getSession(),15000)).data.session}catch(x){console.warn('[ilogia] session check',x)}
@@ -249,11 +432,11 @@ authArea();for(const s of['#vlist','#llist'])$(s).innerHTML='<div class="sk"></d
   const loadCatalog=async()=>{
   try{const q=(t,sel,o)=>sb.from(t).select(sel).order(o).then(r=>{if(r.error)throw r.error;return r.data});
     [st.grades,st.subjects,st.plans,st.videos,st.lib]=await T(Promise.all([q('grades','*','sort_order'),q('subjects','*','sort_order'),q('plans','*','sort_order'),q('videos','id,title,unit,grade_id,subject_id,academic_year,duration,level,is_free,term,grade:grades(name),subject:subjects(name)','id'),q('library_items','id,title,unit,grade_id,subject_id,academic_year,type,is_free,grade:grades(name),subject:subjects(name)','id')]),25000)}
-  catch(x){console.error('[ilogia] catalog',x);
+  catch(x){console.error('[ilogia] catalog',x);hideHomeSkeleton();
     if(window.__anon){for(const s of['#vlist','#llist','#plansGrid'])$(s).innerHTML='<div class="state">سجّل دخولك مجانًا لتصفّح الدروس والمكتبة والباقات.<br><a class="btn s" href="login.html?mode=register">إنشاء حساب</a> <a class="btn g s" href="login.html">تسجيل الدخول</a></div>';return false}
     for(const s of['#vlist','#llist','#plansGrid'])$(s).innerHTML='<div class="state">تعذّر تحميل البيانات.<br><button class="btn g s" data-retry>إعادة المحاولة</button></div>';return false}
-    fill('v',$('#vchips'),$('#vg'));fill('l',$('#lchips'),$('#lg'));renderAll();return true};
-  document.addEventListener('click',e=>{if(e.target.closest('[data-retry]')){for(const s of['#vlist','#llist','#plansGrid'])$(s).innerHTML='<div class="sk"></div>'.repeat(4);loadCatalog()}});
+    fill('v',$('#vchips'),$('#vg'));fill('l',$('#lchips'),$('#lg'));renderAll();hideHomeSkeleton();return true};
+  document.addEventListener('click',e=>{if(e.target.closest('[data-retry]')){showSkeletons();loadCatalog()}});
   // Android app button: the admin uploads the latest APK from admin.html (table app_release + public bucket `app`)
   (async()=>{const b=$('#apkBtn');let url=null;
     try{const r=await sb.from('app_release').select('version,file_path').eq('id',1).maybeSingle();
